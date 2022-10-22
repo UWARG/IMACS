@@ -3,6 +3,7 @@ from HomePage import HomePage
 from MotorsPage import MotorsPage
 from SetupPage import SetupPage
 from LoggingPage import LoggingPage
+from cameraThread import cameraThread
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
@@ -26,6 +27,10 @@ class GroundStationGUI(QWidget):
        
         # Create horizontal box layout for header
         header = QHBoxLayout()
+        
+        # Create video stream
+        self.cvstream = cameraThread()
+        self.cvstream.start()
 
         # Create the header buttons for the different pages
         self.homeButton = QPushButton("Home")
@@ -46,7 +51,7 @@ class GroundStationGUI(QWidget):
         self.stackLoggingPage = QWidget()
 
         # Assign each stack to a specific page in the application
-        HomePage(self.stackHomePage)
+        HomePage(self.stackHomePage, self.cvstream)
         MotorsPage(self.stackMotorsPage)
         SetupPage(self.stackSetupPage)
         LoggingPage(self.stackLoggingPage)
