@@ -13,7 +13,10 @@ class LoggingPage(QWidget):
 
         # Create the Logging page UI here
         
-        self.textbox = QPlainTextEdit()
+        self.textbox = QTextEdit(self)
+
+        #setting to read-only, does not take in keyboard input
+        self.textbox.setReadOnly(True)
         layout.addWidget(self.textbox)
         
         layout.addWidget(QLabel("Logging Page"))
