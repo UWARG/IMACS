@@ -9,6 +9,13 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 
 class GroundStationGUI(QWidget):
+    
+    def ImageUpdateSlot(self, Image):
+      self.FeedLabel.setPixmap(QPixmap.fromImage(Image))
+
+    def CancelFeed(self):
+      self.cvstream.stop()
+    
     def __init__(self):
         super(GroundStationGUI, self).__init__()
 
@@ -29,8 +36,12 @@ class GroundStationGUI(QWidget):
         header = QHBoxLayout()
         
         # Create video stream
-        self.cvstream = cameraThread()
-        self.cvstream.start()
+        self.cameraThread = cameraThread()
+        self.cameraThread.start()
+        self.FeedLabel = QLabel() #emits the pictures
+        self.cameraThread.ImageUpdate.connect(self.ImageUpdateSlot)
+        #self.CancelFeed
+        
 
         # Create the header buttons for the different pages
         self.homeButton = QPushButton("Home")
@@ -51,7 +62,7 @@ class GroundStationGUI(QWidget):
         self.stackLoggingPage = QWidget()
 
         # Assign each stack to a specific page in the application
-        HomePage(self.stackHomePage, self.cvstream)
+        HomePage(self.stackHomePage, self.FeedLabel)
         MotorsPage(self.stackMotorsPage)
         SetupPage(self.stackSetupPage)
         LoggingPage(self.stackLoggingPage)
