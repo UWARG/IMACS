@@ -25,7 +25,18 @@ def decode(msg, BASE=16):
     msg_content = bytes.fromhex(' '.join(msg[8]))
     msg_content = bytes.decode(msg_content)
 
-    return msg_content
+    res = {
+        'length': length,
+        'frame_type': frame_type,
+        'frame_id': frame_id,
+        'address_64_bit': address_64_bit,
+        'address_16_bit': address_16_bit,
+        'brodcast_radius': brodcast_radius,
+        'options': options,
+        'msg_content': msg_content,
+    }
+
+    return res
 
 __name__ = '__decode__'
 if __name__ == '__decode__':
