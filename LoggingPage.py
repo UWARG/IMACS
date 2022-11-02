@@ -22,17 +22,7 @@ class LoggingPage(QWidget):
         layout.addWidget(QLabel("Logging Page"))
         self.stack.setLayout(layout)
 
-if __name__ == '__main__':
-    app = QApplication(sys.argv)
-    app.setStyleSheet('''
-        QWidget {
-            font-size: 30px;
-        }
 
-    ''')
-
-    loggingpage = LoggingPage()
-    loggingpage.show()
 
 
 
