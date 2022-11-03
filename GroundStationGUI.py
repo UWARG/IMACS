@@ -3,18 +3,12 @@ from HomePage import HomePage
 from MotorsPage import MotorsPage
 from SetupPage import SetupPage
 from LoggingPage import LoggingPage
-from cameraThread import cameraThread
+from CameraThread import VideoFeedWorker
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 
 class GroundStationGUI(QWidget):
-    
-    def ImageUpdateSlot(self, Image):
-      self.FeedLabel.setPixmap(QPixmap.fromImage(Image))
-
-    def CancelFeed(self):
-      self.cvstream.stop()
     
     def __init__(self):
         super(GroundStationGUI, self).__init__()
@@ -26,6 +20,12 @@ class GroundStationGUI(QWidget):
         SETUP_PAGE = 2
         LOGGING_PAGE = 3
 
+        # Create the video stream
+        self.videoFeedWorker = VideoFeedWorker()
+        self.videoFeedWorker.start()
+        self.videoFeedLabel = QLabel() #emits the pictures
+        self.videoFeedWorker.ImageUpdate.connect(self.imageUpdateSlot)
+
         # Set the window title
         self.setWindowTitle(WINDOW_TITLE)
 
@@ -34,14 +34,6 @@ class GroundStationGUI(QWidget):
        
         # Create horizontal box layout for header
         header = QHBoxLayout()
-        
-        # Create video stream
-        self.cameraThread = cameraThread()
-        self.cameraThread.start()
-        self.FeedLabel = QLabel() #emits the pictures
-        self.cameraThread.ImageUpdate.connect(self.ImageUpdateSlot)
-        #self.CancelFeed
-        
 
         # Create the header buttons for the different pages
         self.homeButton = QPushButton("Home")
@@ -62,7 +54,7 @@ class GroundStationGUI(QWidget):
         self.stackLoggingPage = QWidget()
 
         # Assign each stack to a specific page in the application
-        HomePage(self.stackHomePage, self.FeedLabel)
+        HomePage(self.stackHomePage, self.videoFeedLabel)
         MotorsPage(self.stackMotorsPage)
         SetupPage(self.stackSetupPage)
         LoggingPage(self.stackLoggingPage)
@@ -89,6 +81,9 @@ class GroundStationGUI(QWidget):
 
         # Display the window
         self.show()
+
+    def imageUpdateSlot(self, Image):
+      self.videoFeedLabel.setPixmap(QPixmap.fromImage(Image))
 
 # Run the application
 def main():

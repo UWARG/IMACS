@@ -1,24 +1,26 @@
-from cameraThread import cameraThread
+from CameraThread import VideoFeedWorker
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 import cv2 
 
 class HomePage(QWidget):
-    def __init__(self, stack, FeedLabel):
+    def __init__(self, stack, videoFeedLabel):
         super(HomePage, self).__init__()
         self.stack = stack
-        self.FeedLabel = FeedLabel
-        #self.CancelBTN = CancelBTN
-        #self.clicked = False
+        self.videoFeedLabel = videoFeedLabel
+        
         # Create the Home page UI here
-        layout = QHBoxLayout()
-        layout.addWidget(QLabel("Home Page"))
-        layout.addWidget(self.FeedLabel)
-        #self.CancelBTN = QPushButton("Cancel")
-        #self.CancelBTN.clicked.connect(self.clicked = True)
-        #layout.addWidget(self.CancelBTN) #basic page layout
-        self.stack.setLayout(layout)
+        body_layout = QHBoxLayout()
+        left_layout = QVBoxLayout()
+
+        # Layout for the left side of the screen
+        left_layout.addWidget(self.videoFeedLabel)
+
+        # Layout for the body of the page
+        body_layout.addLayout(left_layout)
+
+        self.stack.setLayout(body_layout)
     
         
     

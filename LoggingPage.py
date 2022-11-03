@@ -9,18 +9,19 @@ class LoggingPage(QWidget):
         super(LoggingPage, self).__init__()
 
         self.stack = stack
-        layout = QVBoxLayout()
+        body_layout = QVBoxLayout()
 
         # Create the Logging page UI here
-        
+    
         self.textbox = QTextEdit(self)
 
         #setting to read-only, does not take in keyboard input
         self.textbox.setReadOnly(True)
-        layout.addWidget(self.textbox)
+
+        # Add textbox to logging page
+        body_layout.addWidget(self.textbox)
         
-        layout.addWidget(QLabel("Logging Page"))
-        self.stack.setLayout(layout)
+        self.stack.setLayout(body_layout)
 
 
 

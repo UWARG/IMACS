@@ -3,11 +3,12 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 import cv2 
 
-class cameraThread(QThread):
+class VideoFeedWorker(QThread):
     ImageUpdate = pyqtSignal(QImage)
     def run(self):
         self.ThreadActive = True
-        Capture = cv2.VideoCapture(0) #defines video capture
+        # defines video capture
+        Capture = cv2.VideoCapture(0) # We will need to edit this line so that it eventually goes to the drone camera
         while self.ThreadActive: #while it can read
             ret, frame = Capture.read()
             if ret: #if it can read
@@ -16,6 +17,7 @@ class cameraThread(QThread):
                 ConvertToQtFormat = QImage(FlippedImage.data, FlippedImage.shape[1], FlippedImage.shape[0], QImage.Format_RGB888)
                 Pic = ConvertToQtFormat.scaled(640, 480, Qt.KeepAspectRatio)
                 self.ImageUpdate.emit(Pic)
-    def stop(self):
-        self.ThreadActive = False
-        self.quit() 
+
+    # def stop(self):
+    #     self.ThreadActive = False
+    #     self.quit() 
