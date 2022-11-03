@@ -32,10 +32,6 @@ class SetupPage(QWidget):
     def createWaypointGrid(self,formLayout):
         gridLayout = QGridLayout()
         gridShell = QFormLayout()
-        self.showWaypointButton = QPushButton("+")
-        self.hideWaypointButton = QPushButton("-")
-        gridLayout.addWidget(self.showWaypointButton,0,0)
-        gridLayout.addWidget(self.hideWaypointButton,0,1)
         gridShell.addRow(gridLayout)
         formLayout.addLayout(gridShell)
 
@@ -48,9 +44,21 @@ def makeForm(formLayout):
 
     lineEdit = QLineEdit()
 
+    verticalWaypoint =  QHBoxLayout()
+    verticalWaypoint.addWidget(QLabel("Waypoint"))
+    verticalWaypoint.addWidget(QPushButton("+"))
+    verticalWaypoint.addWidget(QPushButton("-"))
+
     theFormLayout.addRow(QLabel("Setup"))
     theFormLayout.addRow(QLabel("RC Link"), rcComboBox)
     theFormLayout.addRow(QLabel("Bidirectional data \n telemetry"), lineEdit)
-    theFormLayout.addRow(QLabel("Waypoint"))
+    theFormLayout.addRow(verticalWaypoint)
+
+    # createTable(theFormLayout)
 
     formLayout.addLayout(theFormLayout) 
+
+# def createTable(theFormLayout):
+#     theTable = QTableWidget()
+
+#     theFormLayout.addRow(theTable)
