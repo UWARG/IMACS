@@ -16,6 +16,9 @@ def decode(msg):
 
 def air_ground_payload(encoded_payload):
 
+    print(encoded_payload[27:])
+    # print(struct.unpack('<f', encoded_payload[17:-1]))
+
     encoded_payload = {
         'time': encoded_payload[0],
         'payload_type': encoded_payload[1],
