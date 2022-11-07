@@ -20,8 +20,8 @@ AIR_GROUND_PAYLOAD_TEST_MESSAGE = {
 def encode(msg):
 
     encoded_msg = payload_to_bytes(msg)
-
     res = b'\x7e\x00\x19\x10\x01\x00\x13\xa2\x00\x41\xb1\x6d\x1c\xff\xfe\x00\x00' + encoded_msg + b'\xd1'
+    
     return res
 
 def payload_to_bytes(payload):
@@ -39,14 +39,13 @@ def payload_to_bytes(payload):
 
 def value_to_bytes(value):
     if type(value) == float:
+        print(struct.pack('<f', value))
+        print(struct.unpack('<f', struct.pack('<f', value)))
         return struct.pack('<f', value)
     elif type(value) == int:
         return bytes([value])
     else:
         raise Exception('Unknown type')
 
-    
 if __name__ == '__main__':
-    print(encode(AIR_GROUND_PAYLOAD_TEST_MESSAGE))
-
-
+    print("ENCODED MESSAGE", encode(AIR_GROUND_PAYLOAD_TEST_MESSAGE))
