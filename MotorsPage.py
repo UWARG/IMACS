@@ -1,3 +1,4 @@
+from StickDeflectionWidget import StickDeflectionWidget
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
@@ -152,41 +153,12 @@ class MotorsPage(QWidget):
 
         bottom_layout.addLayout(l_pbar_layout)
 
-        # Add controls for pitch, roll, yaw
-        drone_axis_layout = QHBoxLayout()
-        horizontal_drone_axis_layout = QVBoxLayout()
-        roll_layout = QHBoxLayout()
-        pitch_layout = QVBoxLayout()
-        yaw_layout = QHBoxLayout()
-
-        self.roll_pbar = QProgressBar(self)
-        self.roll_pbar.setValue(50)
-
-        roll_layout.addWidget( QLabel("Roll") )
-        roll_layout.addWidget(self.roll_pbar)
-
-        self.pitch_pbar = QProgressBar(self)
-        self.pitch_pbar.setOrientation(Qt.Vertical)
-        self.pitch_pbar.setValue(50)
-
-        pitch_layout.addWidget( QLabel("Pitch") )
-        pitch_layout.addWidget(self.pitch_pbar)
-        pitch_layout.addWidget( QLabel(f"{PITCH_VALUE} %") )
-
-        self.yaw_pbar = QProgressBar(self)
-        self.yaw_pbar.setValue(50)
-
-        yaw_layout.addWidget( QLabel("Yaw") )
-        yaw_layout.addWidget(self.yaw_pbar)
-
-        horizontal_drone_axis_layout.addLayout(roll_layout)
-        horizontal_drone_axis_layout.addSpacing(50)
-        horizontal_drone_axis_layout.addLayout(yaw_layout)
-
-        drone_axis_layout.addLayout(horizontal_drone_axis_layout)
-        drone_axis_layout.addLayout(pitch_layout)
-
-        bottom_layout.addLayout(drone_axis_layout)
+        # Add stick deflection
+        self.right_stick_deflection = StickDeflectionWidget("Right Stick", 75, 75)
+        self.left_stick_deflection = StickDeflectionWidget("Left Stick", 75, 75)
+        
+        bottom_layout.addWidget(self.right_stick_deflection)
+        bottom_layout.addWidget(self.left_stick_deflection)
 
         # Add component layouts to final body layout
         body_layout.addLayout(top_layout)
