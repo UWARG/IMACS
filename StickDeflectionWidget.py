@@ -13,7 +13,7 @@ class StickDeflectionWidget(QWidget):
         self.y_coordinate = y_val
 
         canvas = QPixmap(150, 150)
-        canvas.fill(QColor("white"))
+        canvas.fill( QColor("white") )
         self.label.setPixmap(canvas)
 
         self.draw_widget()
