@@ -23,7 +23,7 @@ class SetupPage(QWidget):
 
         mapLayout = QHBoxLayout()
         mapLayout.addWidget(QLabel("Map"))
-        coordinate = (48.5107057, 71.6516848)
+        coordinate = (48.5107057, -71.6516848)
         m = folium.Map(
             tiles='Stamen Terrain',
             zoom_start=13,
@@ -38,7 +38,7 @@ class SetupPage(QWidget):
         webView.setHtml(data.getvalue().decode())
         mapLayout.addWidget(webView)
         
-        layout.addLayout(mapLayout)
+        #layout.addLayout(mapLayout)
         layout.addLayout(formLayout)
         self.createWaypointGrid(formLayout)
         
