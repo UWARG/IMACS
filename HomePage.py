@@ -34,8 +34,6 @@ class HomePage(QWidget):
         information_layout.addWidget(QLabel(f"Fight Time: {flight_time}"))
         information_layout.addWidget(QLabel(f"Vertical Speed: {vertical_speed}"))
         mapLayout = QHBoxLayout()
-        mapLayout.addWidget(QLabel("Map"))
-        left_layout.addLayout(mapLayout)
         coordinate = (48.5107057, -71.6516848)
         m = folium.Map(
             tiles='Stamen Terrain',
