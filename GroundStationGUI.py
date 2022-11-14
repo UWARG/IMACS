@@ -1,4 +1,6 @@
 import sys
+import folium
+import io
 from HomePage import HomePage
 from MotorsPage import MotorsPage
 from SetupPage import SetupPage
@@ -7,6 +9,7 @@ from CameraThread import VideoFeedWorker
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
+from PyQt5.QtWebEngineWidgets import QWebEngineView
 
 class GroundStationGUI(QWidget):
     
@@ -20,11 +23,30 @@ class GroundStationGUI(QWidget):
         SETUP_PAGE = 2
         LOGGING_PAGE = 3
 
+        # Flag variable for switching video and map view
+        self.switchFlag = True
+
         # Create the video stream
         self.videoFeedWorker = VideoFeedWorker()
         self.videoFeedWorker.start()
         self.videoFeedLabel = QLabel() #emits the pictures
         self.videoFeedWorker.ImageUpdate.connect(self.imageUpdateSlot)
+        self.video_layout = QGridLayout()
+        self.video_layout.addWidget(self.videoFeedLabel)
+
+        # Create the map view for the homepage
+        self.map_layout = QHBoxLayout()
+        coordinate = (48.5107057, -71.6516848)
+        map = folium.Map(
+            tiles='Stamen Terrain',
+            zoom_start=13,
+            location=coordinate
+        )
+        data = io.BytesIO() 
+        map.save(data, close_file=False)
+        self.webView = QWebEngineView()
+        self.webView.setHtml(data.getvalue().decode())
+        self.map_layout.addWidget(self.webView)
 
         # Set the window title
         self.setWindowTitle(WINDOW_TITLE)
@@ -54,7 +76,7 @@ class GroundStationGUI(QWidget):
         self.stackLoggingPage = QWidget()
 
         # Assign each stack to a specific page in the application
-        HomePage(self.stackHomePage, self.videoFeedLabel)
+        HomePage(self.stackHomePage, self.map_layout, self.video_layout, self.switchCameraAndMapView)
         MotorsPage(self.stackMotorsPage)
         SetupPage(self.stackSetupPage)
         LoggingPage(self.stackLoggingPage)
@@ -84,6 +106,17 @@ class GroundStationGUI(QWidget):
 
     def imageUpdateSlot(self, Image):
       self.videoFeedLabel.setPixmap(QPixmap.fromImage(Image))
+
+    def switchCameraAndMapView(self):
+      if(self.switchFlag):
+        self.map_layout.addWidget(self.videoFeedLabel)
+        self.video_layout.addWidget(self.webView)
+        self.switchFlag = False
+      else:
+        self.map_layout.addWidget(self.webView)
+        self.video_layout.addWidget(self.videoFeedLabel)
+        self.switchFlag = True
+
 
 # Run the application
 def main():
