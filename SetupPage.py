@@ -38,7 +38,7 @@ class SetupPage(QWidget):
         webView.setHtml(data.getvalue().decode())
         mapLayout.addWidget(webView)
         
-        #layout.addLayout(mapLayout)
+        layout.addLayout(mapLayout)
         layout.addLayout(formLayout)
         self.createWaypointGrid(formLayout)
         
