@@ -95,19 +95,15 @@ class MotorsPage(QWidget):
         m4_output_layout = QVBoxLayout()
 
         m1_output_layout.addWidget( QLabel("Motor 1 Output") )
-        m1_output_layout.addWidget( QLabel(f"Cuurent Draw: {M1_CURRENT_DRAW} Amps") )
         m1_output_layout.addWidget( QLabel(f"Motor Output: {M1_MOTOR_OUTPUT}"))
 
         m2_output_layout.addWidget( QLabel("Motor 2 Output") )
-        m2_output_layout.addWidget( QLabel(f"Cuurent Draw: {M2_CURRENT_DRAW} Amps") )
         m2_output_layout.addWidget( QLabel(f"Motor Output: {M2_MOTOR_OUTPUT}"))
 
         m3_output_layout.addWidget( QLabel("Motor 3 Output") )
-        m3_output_layout.addWidget( QLabel(f"Cuurent Draw: {M3_CURRENT_DRAW} Amps") )
         m3_output_layout.addWidget( QLabel(f"Motor Output: {M3_MOTOR_OUTPUT}"))
 
         m4_output_layout.addWidget( QLabel("Motor 4 Output") )
-        m4_output_layout.addWidget( QLabel(f"Cuurent Draw: {M4_CURRENT_DRAW} Amps") )
         m4_output_layout.addWidget( QLabel(f"Motor Output: {M4_MOTOR_OUTPUT}"))
 
         motor_output_layout.addSpacing(20)
