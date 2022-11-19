@@ -41,3 +41,6 @@ def test_encode_decode(test_message):
 def test_decode_encode(test_message):
     decoded_message = decode(test_message)
     assert encode(decoded_message) == test_message
+
+
+

@@ -19,7 +19,7 @@ def air_ground_payload(encoded_payload):
     print(encoded_payload[27:])
     # print(struct.unpack('<f', encoded_payload[17:-1]))
 
-    encoded_payload = {
+    decoded_payload = {
         'time': encoded_payload[0],
         'payload_type': encoded_payload[1],
         'crc': encoded_payload[2],
@@ -35,7 +35,7 @@ def air_ground_payload(encoded_payload):
         },
         'motor_outputs': [encoded_payload[i] for i in range(27,39)] 
     }
-    return encoded_payload
+    return decoded_payload
 
 if __name__ == '__main__':
     print("DECODED MESSAGE:", decode(TEST))
