@@ -1,4 +1,5 @@
-from Send import Send 
+from Send import Send
+from GroundReceive import GroundReceive 
 
 decoded_payload = {
     "x": 1.34343,
@@ -9,6 +10,9 @@ decoded_payload = {
 
 encoded_payload = Send.send(decoded_payload)
 print(f"encoded payload: {encoded_payload}")
+
+ground = GroundReceive()
+ground.relative_movement_command(encoded_payload)
 
 
 

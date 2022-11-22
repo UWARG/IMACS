@@ -1,7 +1,7 @@
 import struct
 
 class AccessData():
-    def init(self, msg, start_index=0):
+    def __init__(self, msg, start_index=0):
         self.__index = start_index
         self.__msg = msg
         return
