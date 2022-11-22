@@ -7,7 +7,10 @@ decoded_payload = {
     "heading": 9.234,
 }
 
-Send.send(decoded_payload)
+encoded_payload = Send.send(decoded_payload)
+print(f"encoded payload: {encoded_payload}")
+
+
 
 
 

@@ -33,6 +33,6 @@ class Send():
     @staticmethod
     def send(payload):
         encoded_payload = Send.__encode(payload)
-        print(encoded_payload)
+        return encoded_payload
         # should actually send payload thru rfds
         
