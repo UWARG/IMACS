@@ -4,20 +4,13 @@ import struct
 from AccessData import AccessData
 
 class GroundReceive():
-    def init(self):
-        pass
-
     def __decode(self, msg):
-
-        # Flag
         if not msg[0] == b'\x7e'[0]:
             pass
-        # msg[1] is length of bytes in message
-        # msg[2] is type of msg
-        if msg[2] == 0:
-            return self.__odometry_data(msg[2:])
+        if msg[3] == 0:
+            return self.__odometry_data(msg[4:])
         elif msg[2] == 1:
-            return self.__movement_request(payload=msg[2:]) # this just returns null
+            return self.__movement_request(payload=msg[4:]) # this just returns null
         elif msg[2] == 8:
             return "payload type 2"
         else: 

@@ -4,32 +4,16 @@ import struct
 from AccessData import AccessData
 
 class GroundReceive():
-    def init(self):
-        # could define an initial payload if wanted - idk lol
-        pass
-
     def __decode(self, msg):
-
-        # Flag
         if not msg[0] == b'\x7e'[0]:
             pass
-        # msg[1 to 4] is length of bytes in message
-        # msg[5] is type of msg
-        print("msg[0]", msg[0])
-        print("msg[1]", msg[1])
-        print("msg[2]", msg[2])
-        print("msg[3]", msg[3])
-        print("msg[4]", msg[4])
-        print("msg[5]", msg[5])
-        print("msg[6]", msg[6])
-        print("msg[7]", msg[7])
-
+    
         if msg[3] == 1:
-            return self.__movement_request(payload=msg[3:]) # this just returns null
+            return self.__movement_request(payload=msg[4:]) # this just returns null
         elif msg[3] == 2:
-            return self.__relative_movement_command(payload=msg[3:])
+            return self.__relative_movement_command(payload=msg[4:])
         elif msg[3] == 7:
-            return self.__decode_ground_station_data(payload=msg[3:])
+            return self.__decode_ground_station_data(payload=msg[4:])
         elif msg[3] == 8:
             return "payload type 2"
         else: 
@@ -51,7 +35,7 @@ class GroundReceive():
 
         return decoded_payload
     
-    def relative_movement_command(self, payload): #temporary public method for testing
+    def __relative_movement_command(self, payload): #temporary public method for testing
         # [ 2 ] [ Jetson → TM → SM → PM ] RelativeMovementCommand 
         data_retriever = AccessData(msg=payload, start_index=0)
         decoded_payload = {
