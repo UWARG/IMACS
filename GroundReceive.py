@@ -46,10 +46,10 @@ class GroundReceive():
         # [ 2 ] [ Jetson → TM → SM → PM ] RelativeMovementCommand 
         data_retriever = AccessData(msg=payload, start_index=0)
         decoded_payload = {
-            "x": data_retriever.get_data(data_type="f"),
-            "y": data_retriever.get_data(data_type="f"),
-            "z": data_retriever.get_data(data_type="f"),
-            "heading": data_retriever.get_data(data_type="f"),
+            "x": data_retriever.get_data(data_type="f")[0],
+            "y": data_retriever.get_data(data_type="f")[0],
+            "z": data_retriever.get_data(data_type="f")[0],
+            "heading": data_retriever.get_data(data_type="f")[0],
         }
 
         return decoded_payload
