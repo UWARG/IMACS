@@ -13,15 +13,24 @@ class GroundReceive():
         # Flag
         if not msg[0] == b'\x7e'[0]:
             pass
-        # msg[1] is length of bytes in message
-        # msg[2] is type of msg
-        if msg[2] == 1:
-            return self.__movement_request(payload=msg[2:]) # this just returns null
-        elif msg[2] == 2:
-            return self.__relative_movement_command(payload=msg[2:])
-        elif msg[2] == 7:
-            return self.__decode_ground_station_data(payload=msg[2:])
-        elif msg[2] == 8:
+        # msg[1 to 4] is length of bytes in message
+        # msg[5] is type of msg
+        print("msg[0]", msg[0])
+        print("msg[1]", msg[1])
+        print("msg[2]", msg[2])
+        print("msg[3]", msg[3])
+        print("msg[4]", msg[4])
+        print("msg[5]", msg[5])
+        print("msg[6]", msg[6])
+        print("msg[7]", msg[7])
+
+        if msg[3] == 1:
+            return self.__movement_request(payload=msg[3:]) # this just returns null
+        elif msg[3] == 2:
+            return self.__relative_movement_command(payload=msg[3:])
+        elif msg[3] == 7:
+            return self.__decode_ground_station_data(payload=msg[3:])
+        elif msg[3] == 8:
             return "payload type 2"
         else: 
             raise Exception('Unknown payload type')
@@ -46,10 +55,10 @@ class GroundReceive():
         # [ 2 ] [ Jetson → TM → SM → PM ] RelativeMovementCommand 
         data_retriever = AccessData(msg=payload, start_index=0)
         decoded_payload = {
-            "x": data_retriever.get_data(data_type="f")[0],
-            "y": data_retriever.get_data(data_type="f")[0],
-            "z": data_retriever.get_data(data_type="f")[0],
-            "heading": data_retriever.get_data(data_type="f")[0],
+            "x": data_retriever.get_data(data_type="f"),
+            "y": data_retriever.get_data(data_type="f"),
+            "z": data_retriever.get_data(data_type="f"),
+            "heading": data_retriever.get_data(data_type="f"),
         }
 
         return decoded_payload
@@ -99,6 +108,10 @@ class GroundReceive():
             'pitch_rate': [data_retriever.get_data(data_type="uint8_t") for i in range(0, 13)],
         }
         return decoded_payload
+
+    def test_receive(self, msg):
+        # allows calling __decode method for testing purposes
+        return self.__decode(msg)
 
     def receive(self):
         PLACEHOLDER = b'~\x00\x19\x10\x01\x00\x13\xa2\x00A\xb1m\x1c\xff\xfe\x00\x00\x01\x01\x01\x00\x00\x80?\x00\x00\x80?\x00\x00\x80?\x00\x00\x80?\x00\x00\x80?\x00\x00\x80?\x01\x02\x03\x04\x05\x06\x07\x08\t\n\x0b\x0c\xd1' 

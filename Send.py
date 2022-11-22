@@ -26,7 +26,7 @@ class Send():
         if type(value) == float:
             return struct.pack('f', value)
         elif type(value) == int:
-            return bytes(value)
+            return struct.pack("B", value)
         else:
             raise Exception('Unknown type')
     

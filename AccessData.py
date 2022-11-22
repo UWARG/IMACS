@@ -18,4 +18,5 @@ class AccessData():
     
         start_index = self.__index
         self.__index += length
-        return struct.unpack(data_type, self.__msg[start_index:self.__index])[0],
+        unpacked_data = struct.unpack(data_type, self.__msg[start_index:self.__index])[0]
+        return unpacked_data
