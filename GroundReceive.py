@@ -41,6 +41,18 @@ class GroundReceive():
         }
 
         return decoded_payload
+    
+    def relative_movement_command(self, payload): #temporary public method for testing
+        # [ 2 ] [ Jetson → TM → SM → PM ] RelativeMovementCommand 
+        data_retriever = AccessData(msg=payload, start_index=0)
+        decoded_payload = {
+            "x": data_retriever.get_data(data_type="f")[0],
+            "y": data_retriever.get_data(data_type="f")[0],
+            "z": data_retriever.get_data(data_type="f")[0],
+            "heading": data_retriever.get_data(data_type="f")[0],
+        }
+
+        return decoded_payload
 
 
     def __decode_ground_station_data(self, payload):       
