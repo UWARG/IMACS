@@ -1,23 +1,27 @@
 
 import struct
+
+from AccessData import AccessData
+
 class GroundReceive():
     def init(self):
+        # could define an initial payload if wanted - idk lol
         pass
 
     def __decode(self, msg):
 
         # Flag
         if not msg[0] == b'\x7e'[0]:
-            raise Exception('Invalid start byte')
+            pass
         # msg[1] is length of bytes in message
         # msg[2] is type of msg
-        if msg[1] is 1:
+        if msg[2] == 1:
             return self.__movement_request(payload=msg[2:]) # this just returns null
-        elif msg[2] is 2:
+        elif msg[2] == 2:
             return self.__relative_movement_command(payload=msg[2:])
-        elif msg[2] is 7:
+        elif msg[2] == 7:
             return self.__decode_ground_station_data(payload=msg[2:])
-        elif msg[2] is 8:
+        elif msg[2] == 8:
             return "payload type 2"
         else: 
             raise Exception('Unknown payload type')
@@ -56,7 +60,7 @@ class GroundReceive():
             # track [float]
             'track': data_retriever.get_data(data_type="f"),
             # heading [heading] 
-            # 'heading': struct.unpack()
+            'heading': struct.unpack(data_type="f"),
             # air speed [float]
             'air_speed': data_retriever.get_data(data_type="f"),
             # ground speed [float]
@@ -85,30 +89,8 @@ class GroundReceive():
         return decoded_payload
 
     def receive(self):
+        PLACEHOLDER = b'~\x00\x19\x10\x01\x00\x13\xa2\x00A\xb1m\x1c\xff\xfe\x00\x00\x01\x01\x01\x00\x00\x80?\x00\x00\x80?\x00\x00\x80?\x00\x00\x80?\x00\x00\x80?\x00\x00\x80?\x01\x02\x03\x04\x05\x06\x07\x08\t\n\x0b\x0c\xd1' 
         while True:
-            # read from serial port and decode data
+            # PLACEHOLDER should read from serial port and decode data
+            self.paload = self.__decode(PLACEHOLDER)
             pass
-            
-
-class AccessData():
-    def init(self, msg, start_index=0):
-        self.__index = start_index
-        self.__msg = msg
-        return
-
-    def get_data(self, data_type):
-        if data_type is "uint8_t":
-            start_index = self.__index
-            self.__index += 1
-            # This is incorrect
-            return self.__msg[start_index:self.__index]
-        elif data_type is "f":
-            length = 4
-        elif data_type is "d":
-            length = 8
-        else:
-            raise Exception("Invalid Datatype")
-    
-        start_index = self.__index
-        self.__index += length
-        return struct.unpack(data_type, self.__msg[start_index:self.__index])[0],

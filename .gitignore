@@ -1,5 +1,9 @@
 __pycache__
 __pycache__/
 .DS_Store     
+
+# delete these later:
 data_telemetry.py
+other_stuff.py
+trying_stuff.ipynb
 
