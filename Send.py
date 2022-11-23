@@ -1,12 +1,12 @@
 import struct
+import serial
 
-# must encode messages sent to air AND ground
-# should not depend on state therefore all methods are static
+PORT = "/dev/cu.usbmodem14101"
+
 class Send():
-    def init(self):
-        pass
+    def __init__(self, port=PORT):
+        self.rfd = serial.Serial(port=port, baudrate=9600, bytesize=8, timeout=2, stopbits=serial.STOPBITS_ONE)
 
-    # this method is equivalent to "payload_to_bytes()" method from Proof of Concept
     @staticmethod
     def __encode(payload):
         encoded_payload = b''
@@ -30,14 +30,14 @@ class Send():
         else:
             raise Exception('Unknown type')
     
-    @staticmethod
-    def send(payload, type):
+    def send(self, payload, type):
         encoded_payload = Send.__encode(payload)
         # should this include the length of bytes in info or entire frame?
         length = len(encoded_payload) # + 8 # 8 bytes for length and type and start and end 
         wrapped_payload = b'\x7e' + struct.pack("H", length) + struct.pack("B", type) + encoded_payload + b'\xd1' # last should be crc
         
-        print("wrapped_payload")
-        return wrapped_payload
         # should actually send payload thru rfds
+        self.rfd.write(wrapped_payload)
+        return wrapped_payload
+        
         

@@ -11,8 +11,6 @@ class GroundReceive():
             return self.__odometry_data(msg[4:])
         elif msg[2] == 1:
             return self.__movement_request(payload=msg[4:]) # this just returns null
-        elif msg[2] == 8:
-            return "payload type 2"
         else: 
             raise Exception('Unknown payload type')
 
