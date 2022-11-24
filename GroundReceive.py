@@ -1,6 +1,6 @@
-
 import struct
 import serial
+import random # just for mock for gui team
 
 from AccessData import AccessData
 
@@ -11,7 +11,7 @@ TIMEOUT = 2
 
 class GroundReceive():
     def __init__(self, port=PORT, baudrate=BAUDRATE, byte_size=BYTE_SIZE, timeout=TIMEOUT, stopbits=serial.STOPBITS_ONE):
-        self.rfd = serial.Serial(port=port, baudrate=baudrate, bytesize=byte_size, timeout=timeout, stopbits=stopbits)
+        self.rfd = "should be set to serial port" # serial.Serial(port=port, baudrate=baudrate, bytesize=byte_size, timeout=timeout, stopbits=stopbits)
 
     def __decode(self, msg):
         if not msg[0] == b'\x7e'[0]:
@@ -81,6 +81,19 @@ class GroundReceive():
             'pitch_rate': [data_retriever.get_data(data_type="uint8_t") for i in range(0, 13)],
         }
         return decoded_payload
+
+    def receive_mock_gui(self):
+        # Mocks actual data coming from RFD
+        while True:
+            if random.randint(0, 100000) == 1:
+                TEST_PAYLOAD = {
+                    "x": random.random() * 10,
+                    "y": random.random() * 10,
+                    "z": random.random() * 10,
+                    "heading": random.random() * 10,
+                }
+                print("new test payload", TEST_PAYLOAD)
+                self.payload = TEST_PAYLOAD
 
     def test_receive(self, msg):
         # allows calling __decode method for testing purposes
