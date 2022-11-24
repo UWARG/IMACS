@@ -1,7 +1,2 @@
-__pycache__
 __pycache__/
-.DS_Store     
-
-# delete these later:
-other_stuff.py
-serial_stuff.py
+.pytest_cache/
