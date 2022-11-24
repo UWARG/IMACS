@@ -1,7 +1,7 @@
 import random
 
 class GroundReceive():
-    def receive_mock_gui(self):
+    def receive(self):
         # Mocks actual data coming from RFD
         while True:
             if random.randint(0, 100000) == 1:
