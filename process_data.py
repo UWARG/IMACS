@@ -4,16 +4,16 @@ file = open(FILENAME, "r")
 
 data = file.read()
 data_arr = data.split("\n")
+print(data_arr)
 
 delete_list = []
 
 for i in range(0, len(data_arr)):
-    if data_arr[i][-2:] == "0a" or data_arr[i][-2:] == "0d" or data_arr[i][-2:] == ": ":
+    if "b'\\r'" in data_arr[i] or "b'\\n'" in data_arr[i]:
         delete_list.append(i)
-    elif data_arr[i][-2:] == "30":
-        data_arr[i] = data_arr[i][0:-2] + "00"
 
-
+print("data_arr: ", data_arr)
+print("delete_list: ", delete_list)
 for i in range(0, len(delete_list)):
     data_arr.pop(delete_list[i] - i)
 
@@ -22,13 +22,14 @@ for i in range(0, len(delete_list)):
 found_delimiter = False
 delimeter_start_index = 0
 
+print("data_arr: ", data_arr)
+
 print("before while loop")
-while not found_delimiter and delimeter_start_index < len(data_arr):
+while not found_delimiter and delimeter_start_index < len(data_arr) - 1:
     # print("in while loop") # working
     fail = True
-    if data_arr[delimeter_start_index][0:2] == "00":
+    if data_arr[delimeter_start_index][0:2] == "00" and data_arr[delimeter_start_index + 1][0:2] == "00":
         fail = False
-        print("found shit")
         i = 14 + delimeter_start_index
         print("i", i)
         print("len(data_arr)", len(data_arr))
