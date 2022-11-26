@@ -1,5 +1,5 @@
 # ls -l /dev/cu.usb*
-
+import sys
 import serial
 import calendar
 import time
@@ -16,15 +16,21 @@ file = open(FILENAME, "a")
 rfd = serial.Serial(port=PORT, baudrate=BAUDRATE, bytesize=BYTE_SIZE, timeout=TIMEOUT, stopbits=serial.STOPBITS_ONE)
 
 
-
 while True:
-    timestamp = calendar.timegm(time.gmtime())
-    first_hex = rfd.read(2).hex()
-    second_hex = rfd.read(2).hex()
+    if __name__ == "__main__":
+        try:
+            timestamp = calendar.timegm(time.gmtime())
+            info_pack = str(rfd.read(1))
+            # info_pack = info_pack[2:-1]
+            # info_pack = str(info_pack).replace("00", "")
 
-    file.write(str(timestamp) + ": " + str(first_hex) + " " + str(second_hex) + "\n")
-    print(str(first_hex) + " " + str(second_hex))
+            file.write(str(timestamp) + ": " + info_pack + "\n")
+            print(info_pack)
+        except KeyboardInterrupt:
+            print("\nExiting script...")
+            file.close()
+            sys.exit()
+    
 
-file.close()
 
 # later, code should do file comparisons

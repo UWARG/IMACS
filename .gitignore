@@ -3,5 +3,6 @@ __pycache__/
 .DS_Store     
 
 # delete these later:
-other_stuff.py
-serial_stuff.py
+compare_files.py
+compare_files.sh
+pretty.ts

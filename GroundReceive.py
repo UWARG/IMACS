@@ -99,6 +99,22 @@ class GroundReceive():
         # allows calling __decode method for testing purposes
         return self.__decode(msg)
 
+    def temp_receive(self, msg):
+        data_retriever = AccessData(msg=msg, start_index=0)
+        decoded_payload = {
+            'accel': {
+                "a": data_retriever.get_data(data_type="f"),
+                "b": data_retriever.get_data(data_type="f"),
+                "c": data_retriever.get_data(data_type="f"),
+            },
+            "gyro": {
+                "a": data_retriever.get_data(data_type="f"),
+                "b": data_retriever.get_data(data_type="f"),
+                "c": data_retriever.get_data(data_type="f"),
+            }
+
+        }
+
     def receive(self):
         while True:
             if self.rfd.read(1) == b'\x7e'[0]:
