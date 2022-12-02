@@ -21,8 +21,6 @@ while True:
         try:
             timestamp = calendar.timegm(time.gmtime())
             info_pack = str(rfd.read(1))
-            # info_pack = info_pack[2:-1]
-            # info_pack = str(info_pack).replace("00", "")  # remove delimeter      
 
             file.write(str(timestamp) + ": " + info_pack + "\n")
             print(info_pack)
@@ -31,6 +29,3 @@ while True:
             file.close()
             sys.exit()
     
-
-
-# later, code should do file comparisons
