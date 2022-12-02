@@ -8,7 +8,7 @@ BAUDRATE = 115200
 BYTE_SIZE = 8
 TIMEOUT = 2
 
-FILENAME = "text_log.txt"
+FILENAME = "nov_27_test_2.txt"
 PORT = "/dev/cu.usbmodem14101"
 
 file = open(FILENAME, "a")
@@ -22,7 +22,7 @@ while True:
             timestamp = calendar.timegm(time.gmtime())
             info_pack = str(rfd.read(1))
             # info_pack = info_pack[2:-1]
-            # info_pack = str(info_pack).replace("00", "")
+            # info_pack = str(info_pack).replace("00", "")  # remove delimeter      
 
             file.write(str(timestamp) + ": " + info_pack + "\n")
             print(info_pack)
