@@ -1,3 +1,6 @@
+#TO DO: Make entire GUI Full Screen and calculate where the indicators will go. 
+# Make data thread for rotating indicator (might have to edit picture)
+
 import sys
 import folium
 import io
@@ -5,7 +8,7 @@ from HomePage import HomePage
 from MotorsPage import MotorsPage
 from SetupPage import SetupPage
 from LoggingPage import LoggingPage
-from CameraThread import VideoFeedWorker
+from cameraThread import VideoFeedWorker
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
@@ -32,7 +35,7 @@ class GroundStationGUI(QWidget):
         self.videoFeedLabel = QLabel() #emits the pictures
         self.videoFeedWorker.ImageUpdate.connect(self.imageUpdateSlot)
         self.video_layout = QGridLayout()
-        self.video_layout.addWidget(self.videoFeedLabel)
+        self.video_layout.addWidget(self.videoFeedLabel, 0, 0, Qt.AlignCenter)
 
         # Create the map view for the homepage
         self.map_layout = QHBoxLayout()

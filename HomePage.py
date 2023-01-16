@@ -1,7 +1,7 @@
-from CameraThread import VideoFeedWorker
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
+from HeadingWidget import HeadingWidget
 import cv2
 import io
 import folium  # pip install folium
@@ -18,11 +18,14 @@ class HomePage(QWidget):
         self.stack = stack
         self.videoLayout = video_layout
         self.mapLayout = map_layout
-
+        
+        headingIndicator = QWidget()
+        HeadingWidget(headingIndicator)
+    
         # Create the Home page UI here
         body_layout = QHBoxLayout()
         left_layout = QVBoxLayout()
-        information_layout=QVBoxLayout()
+        information_layout= QVBoxLayout()
         altitude=10
         ground_speed=20
         battery=30
@@ -36,6 +39,7 @@ class HomePage(QWidget):
         information_layout.addWidget(QLabel(f"Battery(V): {battery}"))
         information_layout.addWidget(QLabel(f"Fight Time: {flight_time}"))
         information_layout.addWidget(QLabel(f"Vertical Speed: {vertical_speed}"))
+        
         
         self.switchButton = QPushButton("Switch Camera and Map View")   
         self.switchButton.clicked.connect(switchViewsFunction)
@@ -56,6 +60,9 @@ class HomePage(QWidget):
         # webView = QWebEngineView()
         # webView.setHtml(data.getvalue().decode())
         # self.mapLayout.addWidget(webView)
+        
+        # Layout for attitude 
+        self.videoLayout.addWidget(headingIndicator, 0, 0, Qt.AlignRight)
 
         # Layout for the body of the page
         left_layout.addLayout(information_layout)
