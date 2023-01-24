@@ -5,10 +5,8 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 
 class MotorsPage(QWidget):
-    def __init__(self, stack):
+    def __init__(self):
         super(MotorsPage, self).__init__()
-
-        self.stack = stack
 
         # Create the Motor page UI here
 
@@ -185,4 +183,4 @@ class MotorsPage(QWidget):
         body_layout.addSpacing(50)
         body_layout.addLayout(channel_layout)
 
-        self.stack.setLayout(body_layout)
+        self.setLayout(body_layout)

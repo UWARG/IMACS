@@ -12,19 +12,17 @@ Folium in PyQt5
 
 
 class HomePage(QWidget):
-    
-    def __init__(self, stack, map_layout, video_layout, switchViewsFunction):
+    resize_bounding = pyqtSignal()
+    def __init__(self, map_layout, video_layout, switchViewsFunction):
         super(HomePage, self).__init__()
-        self.stack = stack
         self.videoLayout = video_layout
         self.mapLayout = map_layout
         
-        headingIndicator = QWidget()
-        HeadingWidget(headingIndicator)
-    
+        self.headingIndicator = HeadingWidget(self.videoLayout)
+        self.resize_bounding.connect(self.headingIndicator.scaled)
         # Create the Home page UI here
         body_layout = QHBoxLayout()
-        left_layout = QVBoxLayout()
+        self.left_layout = QVBoxLayout()
         information_layout= QVBoxLayout()
         altitude=10
         ground_speed=20
@@ -61,13 +59,17 @@ class HomePage(QWidget):
         # webView.setHtml(data.getvalue().decode())
         # self.mapLayout.addWidget(webView)
         
-        # Layout for attitude 
-        self.videoLayout.addWidget(headingIndicator, 0, 0, Qt.AlignRight)
 
         # Layout for the body of the page
-        left_layout.addLayout(information_layout)
-        left_layout.addLayout(self.videoLayout)
+        self.left_layout.addLayout(information_layout)
+        self.left_layout.addLayout(self.headingIndicator)
 
-        body_layout.addLayout(left_layout)
+        body_layout.addLayout(self.left_layout)
         body_layout.addLayout(self.mapLayout)
-        self.stack.setLayout(body_layout)
+        self.setLayout(body_layout)
+
+    def getLayout(self):
+        return self.headingIndicator
+    
+    def resizeEvent(self, event):
+        self.resize_bounding.emit()

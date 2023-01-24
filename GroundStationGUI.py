@@ -15,7 +15,7 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtWebEngineWidgets import QWebEngineView
 
 class GroundStationGUI(QWidget):
-    
+    image_resize = pyqtSignal(float, float)
     def __init__(self):
         super(GroundStationGUI, self).__init__()
 
@@ -31,6 +31,7 @@ class GroundStationGUI(QWidget):
 
         # Create the video stream
         self.videoFeedWorker = VideoFeedWorker()
+        self.image_resize.connect(self.videoFeedWorker.scaled)
         self.videoFeedWorker.start()
         self.videoFeedLabel = QLabel() #emits the pictures
         self.videoFeedWorker.ImageUpdate.connect(self.imageUpdateSlot)
@@ -73,16 +74,10 @@ class GroundStationGUI(QWidget):
         header.addWidget(self.loggingButton, 2)
 
         # Create the stacks for the different pages
-        self.stackHomePage = QWidget()
-        self.stackMotorsPage = QWidget()
-        self.stackSetupPage = QWidget()
-        self.stackLoggingPage = QWidget()
-
-        # Assign each stack to a specific page in the application
-        HomePage(self.stackHomePage, self.map_layout, self.video_layout, self.switchCameraAndMapView)
-        MotorsPage(self.stackMotorsPage)
-        SetupPage(self.stackSetupPage)
-        LoggingPage(self.stackLoggingPage)
+        self.stackHomePage = HomePage(self.map_layout, self.video_layout, self.switchCameraAndMapView)
+        self.stackMotorsPage = MotorsPage()
+        self.stackSetupPage = SetupPage()
+        self.stackLoggingPage = LoggingPage()
 
         # Add stack to StackedWidget
         stack = QStackedWidget(self)
@@ -105,7 +100,7 @@ class GroundStationGUI(QWidget):
         self.setLayout(parentLayout)
 
         # Display the window
-        self.show()
+        self.showMaximized()
 
     def imageUpdateSlot(self, Image):
       self.videoFeedLabel.setPixmap(QPixmap.fromImage(Image))
@@ -119,6 +114,9 @@ class GroundStationGUI(QWidget):
         self.map_layout.addWidget(self.webView)
         self.video_layout.addWidget(self.videoFeedLabel)
         self.switchFlag = True
+
+    def resizeEvent(self, event):
+      self.image_resize.emit(self.stackHomePage.getLayout().geometry().width(), self.stackHomePage.getLayout().geometry().height())
 
 
 # Run the application

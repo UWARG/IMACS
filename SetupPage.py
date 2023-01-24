@@ -9,10 +9,8 @@ Folium in PyQt5
 """
 
 class SetupPage(QWidget):
-    def __init__(self, stack):
+    def __init__(self):
         super(SetupPage, self).__init__()
-
-        self.stack = stack
 
         # Create the Setup page UI here
         layout = QHBoxLayout()
@@ -275,7 +273,7 @@ class SetupPage(QWidget):
         waypoint_layout.addLayout(lwaypoint_layout)
         waypoint_layout.addLayout(rwaypoint_layout)
 
-        self.stack.setLayout(layout)
+        self.setLayout(layout)
         
 
         

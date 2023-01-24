@@ -5,10 +5,9 @@ import sys
 
 
 class LoggingPage(QWidget):
-    def __init__(self, stack):
+    def __init__(self):
         super(LoggingPage, self).__init__()
 
-        self.stack = stack
         body_layout = QVBoxLayout()
 
         # Create the Logging page UI here
@@ -21,7 +20,7 @@ class LoggingPage(QWidget):
         # Add textbox to logging page
         body_layout.addWidget(self.textbox)
         
-        self.stack.setLayout(body_layout)
+        self.setLayout(body_layout)
 
 
 
