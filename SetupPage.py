@@ -25,11 +25,12 @@ class SetupPage(QWidget):
         mapLayout = QHBoxLayout()
         coordinate = (48.5107057, -71.6516848)
         m = folium.Map(
-            tiles='Stamen Terrain',
-            zoom_start=13,
-            location=coordinate
+            # tiles='Stamen Terrain',
+            tiles='http://localhost:8888/tiles/{z}/{x}/{y}.png',
+            zoom_start=14,
+            location=coordinate,
+            attr="alma map"
         )
-
         # save map data to data object
         data = io.BytesIO()
         m.save(data, close_file=False)
