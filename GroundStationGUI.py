@@ -9,6 +9,7 @@ from MotorsPage import MotorsPage
 from SetupPage import SetupPage
 from LoggingPage import LoggingPage
 from cameraThread import VideoFeedWorker
+from mock_ground_receive import GroundReceive
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
@@ -18,7 +19,8 @@ class GroundStationGUI(QWidget):
     image_resize = pyqtSignal(float, float)
     def __init__(self):
         super(GroundStationGUI, self).__init__()
-
+        
+        #self.data.payload is the dictionary,it may require use of a QThread
         # Constants for Window
         WINDOW_TITLE = "Integrated Monitoring and Command Station (IMACS)"
         HOME_PAGE = 0
@@ -37,6 +39,10 @@ class GroundStationGUI(QWidget):
         self.videoFeedWorker.ImageUpdate.connect(self.imageUpdateSlot)
         self.video_layout = QGridLayout()
         self.video_layout.addWidget(self.videoFeedLabel, 0, 0, Qt.AlignCenter)
+
+        self.dataStream = GroundReceive()
+        #self.dataStream.start()
+        #self.dataStream.new_data.connect()
 
         # Create the map view for the homepage
         self.map_layout = QHBoxLayout()
