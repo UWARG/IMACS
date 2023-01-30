@@ -35,10 +35,8 @@ class GroundStationGUI(QWidget):
         self.videoFeedWorker = VideoFeedWorker()
         self.image_resize.connect(self.videoFeedWorker.scaled)
         self.videoFeedWorker.start()
-        self.videoFeedLabel = QLabel() #emits the pictures
+        self.videoFeedLabel = QGraphicsPixmapItem() 
         self.videoFeedWorker.ImageUpdate.connect(self.imageUpdateSlot)
-        self.video_layout = QGridLayout()
-        self.video_layout.addWidget(self.videoFeedLabel, 0, 0, Qt.AlignCenter)
 
         self.dataStream = GroundReceive()
         #self.dataStream.start()
@@ -82,7 +80,7 @@ class GroundStationGUI(QWidget):
         header.addWidget(self.loggingButton, 2)
 
         # Create the stacks for the different pages
-        self.stackHomePage = HomePage(self.map_layout, self.video_layout, self.switchCameraAndMapView)
+        self.stackHomePage = HomePage(self.map_layout, self.videoFeedLabel)
         self.stackMotorsPage = MotorsPage()
         self.stackSetupPage = SetupPage()
         self.stackLoggingPage = LoggingPage()
@@ -112,16 +110,6 @@ class GroundStationGUI(QWidget):
 
     def imageUpdateSlot(self, Image):
       self.videoFeedLabel.setPixmap(QPixmap.fromImage(Image))
-
-    def switchCameraAndMapView(self):
-      if(self.switchFlag):
-        self.map_layout.addWidget(self.videoFeedLabel)
-        self.video_layout.addWidget(self.webView)
-        self.switchFlag = False
-      else:
-        self.map_layout.addWidget(self.webView)
-        self.video_layout.addWidget(self.videoFeedLabel)
-        self.switchFlag = True
 
     def resizeEvent(self, event):
       self.image_resize.emit(self.stackHomePage.getLayout().geometry().width(), self.stackHomePage.getLayout().geometry().height())

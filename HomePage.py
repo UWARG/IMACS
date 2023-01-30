@@ -13,7 +13,7 @@ Folium in PyQt5
 
 class HomePage(QWidget):
     resize_bounding = pyqtSignal()
-    def __init__(self, map_layout, video_layout, switchViewsFunction):
+    def __init__(self, map_layout, video_layout):
         super(HomePage, self).__init__()
         self.videoLayout = video_layout
         self.mapLayout = map_layout
@@ -38,11 +38,6 @@ class HomePage(QWidget):
         information_layout.addWidget(QLabel(f"Fight Time: {flight_time}"))
         information_layout.addWidget(QLabel(f"Vertical Speed: {vertical_speed}"))
         
-        
-        self.switchButton = QPushButton("Switch Camera and Map View")   
-        self.switchButton.clicked.connect(switchViewsFunction)
-        information_layout.addWidget(self.switchButton)
-
         # self.mapLayout = map_layout
         # coordinate = (48.5107057, -71.6516848)
         # m = folium.Map(
