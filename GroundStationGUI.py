@@ -49,10 +49,34 @@ class GroundStationGUI(QWidget):
             attr="alma map"
         )
         data = io.BytesIO() 
+
+        folium.Marker(
+            location = [48.5107057, -71.6516848], 
+            popup='drone',
+            # tooltip=tooltip,
+            icon=folium.Icon(color='blue' , icon='plane' , icon_color='black', draggable=True)
+        ).add_to(map)
+
+
+        # map.save(data, close_file=False)
+        # folium.Marker(
+        #     location = [48.6107077, -71.6516848], 
+        #     popup='drone2',
+        #     # tooltip=tooltip,
+        #     icon=folium.Icon(color='green' , icon='plane' , icon_color='black', draggable=True)
+        # ).add_to(map)
         map.save(data, close_file=False)
         self.webView = QWebEngineView()
         self.webView.setHtml(data.getvalue().decode())
         self.map_layout.addWidget(self.webView)
+        
+        # folium.Marker(
+        #     location = [48.5107057, -71.6516848], 
+        #     popup='drone',
+        #     # tooltip=tooltip,
+        #     icon=folium.Icon(color='blue' , icon='plane' , icon_color='black', draggable=True)
+        # ).add_to(map)
+
 
         # Set the window title
         self.setWindowTitle(WINDOW_TITLE)
