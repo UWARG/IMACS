@@ -1,9 +1,14 @@
 import random
+from PyQt5.QtCore import *
+from PyQt5.QtGui import *
+from PyQt5.QtWidgets import *
 
-class GroundReceive():
-    def receive(self):
+class GroundReceive(QThread):
+    new_data = pyqtSignal()
+    def run(self):
+        self.threadActive = True
         # Mocks actual data coming from RFD
-        while True:
+        while self.threadActive:
             if random.randint(0, 100000) == 1:
                 TEST_PAYLOAD = {
                     'motor_outputs': [random.random() * 10 for i in range(0,12)],
@@ -28,5 +33,5 @@ class GroundReceive():
                     'batery_voltages': [random.random() * 10 for i in range(0, 13)],
                     'pitch_rate': [random.random() * 10 for i in range(0, 13)],
                 }
-                print("new test payload", TEST_PAYLOAD)
                 self.payload = TEST_PAYLOAD
+                self.new_data.emit()
