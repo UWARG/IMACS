@@ -43,7 +43,7 @@ class GroundStationGUI(QWidget):
         #self.dataStream.new_data.connect()
 
         # Create the map view for the homepage
-        self.map_layout = QHBoxLayout()
+        self.map_layout = QVBoxLayout()
         coordinate = (48.5107057, -71.6516848)
         map = folium.Map(
             # tiles='Stamen Terrain',
