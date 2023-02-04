@@ -31,6 +31,16 @@ class SetupPage(QWidget):
             location=coordinate,
             attr="alma map"
         )
+        folium.Marker(
+            location = [48.5107057, -71.6516848], 
+            popup='drone',
+            # tooltip=tooltip,
+            icon=folium.Icon(color='blue' , icon='plane' , icon_color='black', draggable=True)
+        ).add_to(m)
+
+        
+
+
         # save map data to data object
         data = io.BytesIO()
         m.save(data, close_file=False)
@@ -305,4 +315,4 @@ def makeForm(formLayout):
     theFormLayout.addRow(QLabel("Bidirectional data \n telemetry"), lineEdit)
     theFormLayout.addRow(QLabel("Waypoint"))
 
-    formLayout.addLayout(theFormLayout) 
+    theFormLayout.addWidget(QPushButton("Get marker on map"))
