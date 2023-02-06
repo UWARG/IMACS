@@ -5,26 +5,26 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 
 class MotorsPage(QWidget):
-    def __init__(self):
+    def __init__(self, data):
         super(MotorsPage, self).__init__()
-
+        self.data = data
         # Create the Motor page UI here
 
         # Constants for UI declared here
-        M1_THROTTLE_PERCENTAGE = 25
-        M2_THROTTLE_PERCENTAGE = 50
-        M3_THROTTLE_PERCENTAGE = 75
-        M4_THROTTLE_PERCENTAGE = 100
+        M1_THROTTLE_PERCENTAGE = self.data.get('motor_outputs')[0]
+        M2_THROTTLE_PERCENTAGE = self.data.get('motor_outputs')[1]
+        M3_THROTTLE_PERCENTAGE = self.data.get('motor_outputs')[2]
+        M4_THROTTLE_PERCENTAGE = self.data.get('motor_outputs')[3]
 
-        M1_MOTOR_OUTPUT = 10
-        M2_MOTOR_OUTPUT = 20
-        M3_MOTOR_OUTPUT = 30
-        M4_MOTOR_OUTPUT = 40
+        M1_MOTOR_OUTPUT = self.data.get('motor_outputs')[4]
+        M2_MOTOR_OUTPUT = self.data.get('motor_outputs')[5]
+        M3_MOTOR_OUTPUT = self.data.get('motor_outputs')[6]
+        M4_MOTOR_OUTPUT = self.data.get('motor_outputs')[7]
 
-        M1_CURRENT_DRAW = 10
-        M2_CURRENT_DRAW = 20
-        M3_CURRENT_DRAW = 30
-        M4_CURRENT_DRAW = 40
+        M1_CURRENT_DRAW = self.data.get('motor_outputs')[8]
+        M2_CURRENT_DRAW = self.data.get('motor_outputs')[9]
+        M3_CURRENT_DRAW = self.data.get('motor_outputs')[10]
+        M4_CURRENT_DRAW = self.data.get('motor_outputs')[11]
 
         # Create the layouts for the throttle % UI
         body_layout = QHBoxLayout()

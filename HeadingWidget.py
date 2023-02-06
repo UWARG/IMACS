@@ -4,9 +4,10 @@ from PyQt5.QtWidgets import *
 
 class HeadingWidget(QVBoxLayout):
 
-    def __init__(self, video):
+    def __init__(self, video, data):
         super(HeadingWidget, self).__init__()
         self.video = video
+        self.data = data
         self.scene = QGraphicsScene()
         self.view = QGraphicsView()
         self.translateAttitude = QTransform()
@@ -20,7 +21,7 @@ class HeadingWidget(QVBoxLayout):
         self.circlegraphic_pixmap.setPixmap(self.circlepixmap)
         self.circlegraphic_pixmap.setScale(0.75)
         self.circlegraphic_pixmap.setTransformOriginPoint(self.circlegraphic_pixmap.boundingRect().width()/2, self.circlegraphic_pixmap.boundingRect().height()/2)
-        self.circlegraphic_pixmap.setRotation(0)
+        self.circlegraphic_pixmap.setRotation(self.data.get('imu_data').get('roll'))
 
         self.centerpixmap = QPixmap('src/center.png')
         self.centergraphic_pixmap = QGraphicsPixmapItem()
@@ -31,7 +32,7 @@ class HeadingWidget(QVBoxLayout):
         self.compassgraphic_pixmap.setPixmap(self.compasspixmap)
         self.compassgraphic_pixmap.setTransformOriginPoint(self.compassgraphic_pixmap.boundingRect().width()/2, self.compassgraphic_pixmap.boundingRect().height()/2)
         self.compassgraphic_pixmap.setScale(0.35)
-        self.compassgraphic_pixmap.setRotation(180)
+        self.compassgraphic_pixmap.setRotation(self.data.get('heading'))
 
         self.arrowpixmap = QPixmap('src/arrow.png')
         self.arrowgraphic_pixmap = QGraphicsPixmapItem()
@@ -66,21 +67,6 @@ class HeadingWidget(QVBoxLayout):
         
         self.addWidget(self.view)
         
-
-    def scaled(self):
-    
-        print("changed")
-        
-        
-        
-        
-        
-        
-    
-        
-        #self.translateVideo.translate((self.view.width() - self.video.boundingRect().width())/4, 0)
-        #self.circlegraphic_pixmap.setTransform(self.translateAttitude)
-        #print(self.view.width() - self.video.boundingRect().width())
 
 
 

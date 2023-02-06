@@ -12,23 +12,21 @@ Folium in PyQt5
 
 
 class HomePage(QWidget):
-    resize_bounding = pyqtSignal()
-    def __init__(self, map_layout, video_layout):
+    def __init__(self, map_layout, video_layout, data):
         super(HomePage, self).__init__()
         self.videoLayout = video_layout
         self.mapLayout = map_layout
-        
-        self.headingIndicator = HeadingWidget(self.videoLayout)
-        self.resize_bounding.connect(self.headingIndicator.scaled)
+        self.data = data 
+        self.headingIndicator = HeadingWidget(self.videoLayout, self.data)
         # Create the Home page UI here
         body_layout = QHBoxLayout()
         self.left_layout = QVBoxLayout()
         information_layout= QVBoxLayout()
-        altitude=10
-        ground_speed=20
-        battery=30
-        flight_time=40
-        vertical_speed=50
+        altitude = self.data.get('gps_data').get('alt')
+        ground_speed = self.data.get('ground_speed')
+        battery = self.data.get('batery_voltages')
+        flight_time = 0 
+        vertical_speed = 0 
 
         # Layout for the left side of the screen
         information_layout.addWidget(QLabel("Drone Information"))
@@ -66,5 +64,3 @@ class HomePage(QWidget):
     def getLayout(self):
         return self.headingIndicator
     
-    def resizeEvent(self, event):
-        self.resize_bounding.emit()

@@ -4,7 +4,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 
 class GroundReceive(QThread):
-    new_data = pyqtSignal()
+    new_data = pyqtSignal(dict)
     def run(self):
         self.threadActive = True
         # Mocks actual data coming from RFD
@@ -32,6 +32,6 @@ class GroundReceive(QThread):
                     'yaw_rate': random.random() * 10,
                     'batery_voltages': [random.random() * 10 for i in range(0, 13)],
                     'pitch_rate': [random.random() * 10 for i in range(0, 13)],
-                }
+                }                
                 self.payload = TEST_PAYLOAD
-                self.new_data.emit()
+                self.new_data.emit(self.payload)
