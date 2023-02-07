@@ -1,6 +1,6 @@
 import random
 
-from structs import GroundStationData, SensorData
+from structs import GroundStationData, SensorData, PIDValues, PIDController, GroundStationPIDSetResponse, Header
 
 class GroundReceive():
     def __init__(self, ground_station_data=None, pid_set_response=None):
@@ -8,42 +8,13 @@ class GroundReceive():
         self.pid_set_response = pid_set_response
 
     def receive(self):
-        raise Exception("deprecated -- use 'mock_receive' instead")
-        # Mocks actual data coming from RFD
-        # this is old, use the "mock_receive" function instead
-        while True:
-            if random.randint(0, 100000) == 1:
-                TEST_PAYLOAD = {
-                    'motor_outputs': [random.random() * 10 for i in range(0,12)],
-                    'gps_data': {
-                        'lat': random.random() * 10,
-                        'lon': random.random() * 10,
-                        'alt': random.random() * 10,
-                    },
-                    'climb_rate': random.random() * 10,
-                    'track': random.random() * 10,
-                    'heading': random.random() * 10,
-                    'air_speed': random.random() * 10,
-                    'ground_speed': random.random() * 10,
-                    'imu_data': {
-                        'yaw': random.random() * 10,
-                        'pitch': random.random() * 10,
-                        'roll': random.random() * 10,
-                    },
-                    'roll_rate': random.random() * 10,
-                    'pitch_rate': random.random() * 10,
-                    'yaw_rate': random.random() * 10,
-                    'batery_voltages': [random.random() * 10 for i in range(0, 13)],
-                    'pitch_rate': [random.random() * 10 for i in range(0, 13)],
-                }
-                print("new test payload", TEST_PAYLOAD)
-                self.payload = TEST_PAYLOAD
+        return self.mock_receive(self)
     
     def __decode(self, driver_packet):
         if type(driver_packet) == GroundStationData:
             self.__decode_ground_station_data(driver_packet)
-        elif type(driver_packet) == SensorData:
-            self.__decode_sensor_data(driver_packet)
+        elif type(driver_packet) == GroundStationPIDSetResponse:
+            self.__decode_pid_set_response(driver_packet)
         else:
             raise Exception("Unknown packet type")
 
@@ -71,26 +42,40 @@ class GroundReceive():
             'Battery_Voltages': driver_packet.battery_voltages,
             'Controller_Values':  driver_packet.controller_values,
         }
-    def __decode_sensor_data(self, driver_packet):
-        self.sensor_data_payload = {
+    def __decode_pid_set_response(self, driver_packet):
+        self.ground_station_pid_set_response_payload = {
             "flag": driver_packet.header.flag,
             "length": driver_packet.header.length,
-            "latitude": driver_packet.header.latitude,
+            "type": driver_packet.header.type,
             "controller_number": driver_packet.controller_number,
-            "controller": driver_packet.controller,
+            "controller": [ {"P": driver_packet.controller.axes[i].P, "I": driver_packet.controller.axes[i].I, "D": driver_packet.controller.axes[i].D } for i in range(0,6)],
             "crc": driver_packet.crc,
         }
 
     def __gen_mock_packet(self):
-        flag = random.randint(0, 1)
-        if flag == 0:
-            return GroundStationData()
+        if random.randint(0,1) == 1:
+            header = Header(b'\x00', b'\x00\x01', b'\x01')
+            sensor_data = SensorData(1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0, 11.0, 12.0, 13.0)
+            motor_outputs = b'\x00\x01\x00\x01\x00\x01\x00\x01\x00\x01\x00\x01'
+            battery_voltages = b'\x00\x01\x00\x01\x00\x01\x00\x01\x00\x01\x00\x01\x00'
+            controller_values = b'\x00\x01\x00\x01\x00\x01\x00\x01\x00\x01\x00\x01\x00\x01\x00\x01'
+            crc = b'\x00\x01\x00\x01\x00\x01'
+            return GroundStationData(header=header, motor_outputs=motor_outputs, data=sensor_data, battery_voltages=battery_voltages, controller_values=controller_values, crc=crc)
         else: 
-            return SensorData()
+            header = Header(b'\x00', b'\x00\x01', b'\x01')
+            controller_number = b'\x00'
+            crc = b'\x00\x01\x00\x01\x00\x01'
+            pid_values = [PIDValues(1.0 + i, 2.0 + i, 3.0 + i) for i in range(0, 6)]
+            controller = PIDController(pid_values)
+            return GroundStationPIDSetResponse(header, controller_number, controller, crc)
 
     def mock_receive(self):
         while True:
-            if random.randint(0, 100000) == 1:
+            if random.randint(0, 1000000) == 1:
                 mock_packet = self.__gen_mock_packet()
                 self.__decode(mock_packet)
+                print(self.ground_station_pid_set_response_payload)
+                print(self.payload)
+        
+
 

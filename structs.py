@@ -6,7 +6,7 @@ class PIDValues:
 
 
 class PIDController:
-    def PIDValues(self, axes):
+    def __init__(self, axes):
         self.axes = axes # array of size 6 of PID values
 
 class GroundStationData:
@@ -20,19 +20,19 @@ class GroundStationData:
 
 class SensorData:
     def __init__(self, latitude, longitude, altitude, climb_rate, heading, air_speed, ground_speed, roll, pitch, yaw, roll_rate, pitch_rate, yaw_rate):
-        self.latitude = latitude;
-        self.longitude = longitude;
-        self.altitude = altitude;
-        self.climb_rate = climb_rate;
-        self.heading = heading;
-        self.air_speed = air_speed;
-        self.ground_speed = ground_speed;
-        self.roll = roll;
-        self.pitch = pitch;
-        self.yaw = yaw;
-        self.roll_rate = roll_rate;
-        self.pitch_rate = pitch_rate;
-        self.yaw_rate = yaw_rate;
+        self.latitude = latitude
+        self.longitude = longitude
+        self.altitude = altitude
+        self.climb_rate = climb_rate
+        self.heading = heading
+        self.air_speed = air_speed
+        self.ground_speed = ground_speed
+        self.roll = roll
+        self.pitch = pitch
+        self.yaw = yaw
+        self.roll_rate = roll_rate
+        self.pitch_rate = pitch_rate
+        self.yaw_rate = yaw_rate
 
 class Header:
     def __init__(self, flag, length, type):
