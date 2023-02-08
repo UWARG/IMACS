@@ -27,35 +27,21 @@ class HomePage(QWidget):
         self.ground_speed = 0
         self.battery = 0
         self.flight_time = 0 
-        self.vertical_speed = 0 
+        self.airspeed = 0 
 
         self.altitude_label = QLabel(self.tr(f"Altitude: {self.altitude}"))
         self.ground_speed_label = QLabel(f"Ground Speed: {self.ground_speed}")
         self.battery_label = QLabel(f"Battery(V): {self.battery}")
+        self.flight_label = QLabel(f"Flight Time: {self.flight_time}")
+        self.airspeed_label = QLabel(f"Airspeed: {self.airspeed}")
 
         # Layout for the left side of the screen
         self.information_layout.addWidget(QLabel("Drone Information"))
         self.information_layout.addWidget(self.altitude_label)
         self.information_layout.addWidget(self.ground_speed_label)
         self.information_layout.addWidget(self.battery_label)
-        self.information_layout.addWidget(QLabel(f"Fight Time: {self.flight_time}"))
-        self.information_layout.addWidget(QLabel(f"Vertical Speed: {self.vertical_speed}"))
-        
-        # self.mapLayout = map_layout
-        # coordinate = (48.5107057, -71.6516848)
-        # m = folium.Map(
-        #     tiles='Stamen Terrain',
-        #     zoom_start=13,
-        #     location=coordinate
-        # )
-
-        # # save map data to data object
-        # data = io.BytesIO()
-        # m.save(data, close_file=False)
-
-        # webView = QWebEngineView()
-        # webView.setHtml(data.getvalue().decode())
-        # self.mapLayout.addWidget(webView)
+        self.information_layout.addWidget(self.flight_label)
+        self.information_layout.addWidget(self.airspeed_label)
         
         # Layout for the body of the page
         self.left_layout.addLayout(self.information_layout)
@@ -72,5 +58,7 @@ class HomePage(QWidget):
         self.altitude_label.setText(f"Altitude: {round(data.get('gps_data').get('alt'), 3)}")
         self.ground_speed_label.setText(f"Ground Speed: {round(data.get('ground_speed'), 3)}")
         self.battery_label.setText(f"Battery(V): {round(data.get('battery_voltages')[0], 3)}")
+        #self.flight_label.setText(f"Flight Time: {round(data.get(''))}")
+        self.airspeed_label.setText(f"Airspeed: {round(data.get('air_speed'), 3)}")
         self.new_heading_data.emit(data)
     

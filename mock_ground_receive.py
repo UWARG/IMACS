@@ -6,8 +6,10 @@ from PyQt5.QtWidgets import *
 
 from structs import GroundStationData, SensorData, PIDValues, PIDController, GroundStationPIDSetResponse, Header
 
-class GroundReceive():
+class GroundReceive(QThread):
+    new_data = pyqtSignal(dict)
     def __init__(self, ground_station_data=None, pid_set_response=None):
+        super(QThread, self).__init__()
         self.payload = ground_station_data
         self.pid_set_response = pid_set_response
 
@@ -28,16 +30,16 @@ class GroundReceive():
         controller_values_retriever = AccessData(msg=driver_packet.controller_values, start_index=0)
 
         self.payload = {
-            'motor_outputs': [motor_outputs_retriever.get_data(data_type="B") for i in range(0, 12)], # list of 12 ints
+            'motor_outputs': [motor_outputs_retriever.get_data(data_type="B") for i in range(0, 12)], # list of 12 ints, motor page
             'gps_data': {
-                'lat' : driver_packet.data.latitude, # double
-                'lon' : driver_packet.data.longitude, # double
-                'alt' : driver_packet.data.altitude, # float
+                'lat' : driver_packet.data.latitude, # double, map
+                'lon' : driver_packet.data.longitude, # double, map
+                'alt' : driver_packet.data.altitude, # float, 
             },  
             'climb_rate': driver_packet.data.climb_rate, # float
             'heading': driver_packet.data.heading, # float
             'air_speed': driver_packet.data.air_speed, # float
-            'ground_Speed': driver_packet.data.ground_speed, # float
+            'ground_speed': driver_packet.data.ground_speed, # float
             'imu_data':{
                 'roll': driver_packet.data.roll, # float
                 'pitch': driver_packet.data.pitch, # float
@@ -86,47 +88,16 @@ class GroundReceive():
             controller = PIDController(pid_values)
             return GroundStationPIDSetResponse(header, controller_number, controller, crc)
 
-    def mock_receive(self):
-        while True:
+    def run(self):
+        self.threadActive = True
+        while self.threadActive:
             if random.randint(0, 1000000) == 1:
                 mock_packet = self.__gen_mock_packet()
                 self.__decode(mock_packet)
             if self.pid_set_response != None:
                 print(self.pid_set_response)
             if self.payload != None:
-                print(self.payload)
+                self.new_data.emit(self.payload)
         
 
-class GroundReceive(QThread):
-    new_data = pyqtSignal(dict)
-    def run(self):
-        self.threadActive = True
-        # Mocks actual data coming from RFD
-        while self.threadActive:
-            if random.randint(0, 100000) == 1:
-                TEST_PAYLOAD = {
-                    'motor_outputs': [random.random() * 10 for i in range(0,12)],
-                    'gps_data': {
-                        'lat': random.random() * 10,
-                        'lon': random.random() * 10,
-                        'alt': random.random() * 10,
-                    },
-                    'climb_rate': random.random() * 10,
-                    'track': random.random() * 10,
-                    'heading': random.random() * 10,
-                    'air_speed': random.random() * 10,
-                    'ground_speed': random.random() * 10,
-                    'imu_data': {
-                        'yaw': random.random() * 10,
-                        'pitch': random.random() * 10,
-                        'roll': random.random() * 10,
-                    },
-                    'roll_rate': random.random() * 10,
-                    'pitch_rate': random.random() * 10,
-                    'yaw_rate': random.random() * 10,
-                    'battery_voltages': [random.random() * 10 for i in range(0, 13)],
-                    'controller_rate': [random.random() * 10 for i in range(0, 16)],
-                }                
-                self.payload = TEST_PAYLOAD
-                self.new_data.emit(self.payload)
 
