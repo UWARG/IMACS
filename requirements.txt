@@ -5,7 +5,7 @@ folium==0.13.0
 idna==3.4
 Jinja2==3.1.2
 MarkupSafe==2.1.1
-numpy==1.21.6
+numpy>=1.21.6
 opencv-python==4.6.0.66
 PyQt5==5.15.7
 PyQt5-Qt5==5.15.2
