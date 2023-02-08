@@ -5,26 +5,25 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 
 class MotorsPage(QWidget):
-    def __init__(self, data):
+    def __init__(self):
         super(MotorsPage, self).__init__()
-        self.data = data
         # Create the Motor page UI here
 
         # Constants for UI declared here
-        M1_THROTTLE_PERCENTAGE = self.data.get('motor_outputs')[0]
-        M2_THROTTLE_PERCENTAGE = self.data.get('motor_outputs')[1]
-        M3_THROTTLE_PERCENTAGE = self.data.get('motor_outputs')[2]
-        M4_THROTTLE_PERCENTAGE = self.data.get('motor_outputs')[3]
+        self.M1_THROTTLE_PERCENTAGE = 0
+        self.M2_THROTTLE_PERCENTAGE = 0
+        self.M3_THROTTLE_PERCENTAGE = 0
+        self.M4_THROTTLE_PERCENTAGE = 0
 
-        M1_MOTOR_OUTPUT = self.data.get('motor_outputs')[4]
-        M2_MOTOR_OUTPUT = self.data.get('motor_outputs')[5]
-        M3_MOTOR_OUTPUT = self.data.get('motor_outputs')[6]
-        M4_MOTOR_OUTPUT = self.data.get('motor_outputs')[7]
+        self.M1_MOTOR_OUTPUT = 0
+        self.M2_MOTOR_OUTPUT = 0
+        self.M3_MOTOR_OUTPUT = 0
+        self.M4_MOTOR_OUTPUT = 0
 
-        M1_CURRENT_DRAW = self.data.get('motor_outputs')[8]
-        M2_CURRENT_DRAW = self.data.get('motor_outputs')[9]
-        M3_CURRENT_DRAW = self.data.get('motor_outputs')[10]
-        M4_CURRENT_DRAW = self.data.get('motor_outputs')[11]
+        self.M1_CURRENT_DRAW = 0
+        self.M2_CURRENT_DRAW = 0
+        self.M3_CURRENT_DRAW = 0
+        self.M4_CURRENT_DRAW = 0
 
         # Create the layouts for the throttle % UI
         body_layout = QHBoxLayout()
@@ -41,39 +40,39 @@ class MotorsPage(QWidget):
 
         # Motor 1 Throttle %
         self.m1ProgressBar = QProgressBar(self)
-        self.m1ProgressBar.setValue(M1_THROTTLE_PERCENTAGE)
+        self.m1ProgressBar.setValue(self.M1_THROTTLE_PERCENTAGE)
         self.m1ProgressBar.setOrientation(Qt.Vertical)
 
         m1_layout.addWidget( QLabel("Motor 1") )
         m1_layout.addWidget(self.m1ProgressBar)
-        m1_layout.addWidget( QLabel(f"{M1_THROTTLE_PERCENTAGE} %") )
+        m1_layout.addWidget( QLabel(f"{self.M1_THROTTLE_PERCENTAGE} %") )
 
         # Motor 2 Throttle %
         self.m2ProgressBar = QProgressBar(self)
-        self.m2ProgressBar.setValue(M2_THROTTLE_PERCENTAGE)
+        self.m2ProgressBar.setValue(self.M2_THROTTLE_PERCENTAGE)
         self.m2ProgressBar.setOrientation(Qt.Vertical)
 
         m2_layout.addWidget( QLabel("Motor 2") )
         m2_layout.addWidget(self.m2ProgressBar)
-        m2_layout.addWidget( QLabel(f"{M2_THROTTLE_PERCENTAGE} %") )
+        m2_layout.addWidget( QLabel(f"{self.M2_THROTTLE_PERCENTAGE} %") )
 
         # Motor 3 Throttle %
         self.m3ProgressBar = QProgressBar(self)
-        self.m3ProgressBar.setValue(M3_THROTTLE_PERCENTAGE)
+        self.m3ProgressBar.setValue(self.M3_THROTTLE_PERCENTAGE)
         self.m3ProgressBar.setOrientation(Qt.Vertical)
 
         m3_layout.addWidget( QLabel("Motor 3") )
         m3_layout.addWidget(self.m3ProgressBar)
-        m3_layout.addWidget( QLabel(f"{M3_THROTTLE_PERCENTAGE} %") )
+        m3_layout.addWidget( QLabel(f"{self.M3_THROTTLE_PERCENTAGE} %") )
 
         self.m4ProgressBar = QProgressBar(self)
-        self.m4ProgressBar.setValue(M4_THROTTLE_PERCENTAGE)
+        self.m4ProgressBar.setValue(self.M4_THROTTLE_PERCENTAGE)
         self.m4ProgressBar.setOrientation(Qt.Vertical)
 
         # Motor 4 Throttle %
         m4_layout.addWidget( QLabel("Motor 4") )
         m4_layout.addWidget(self.m4ProgressBar)
-        m4_layout.addWidget( QLabel(f"{M4_THROTTLE_PERCENTAGE} %") )
+        m4_layout.addWidget( QLabel(f"{self.M4_THROTTLE_PERCENTAGE} %") )
 
         # Add Throttle % to the layout
         throttle_percentage_layout.addLayout(m1_layout)
@@ -93,16 +92,20 @@ class MotorsPage(QWidget):
         m4_output_layout = QVBoxLayout()
 
         m1_output_layout.addWidget( QLabel("Motor 1 Output") )
-        m1_output_layout.addWidget( QLabel(f"Motor Output: {M1_MOTOR_OUTPUT}"))
+        self.m1_output_label = QLabel(f"Motor Output: {self.M1_MOTOR_OUTPUT}")
+        m1_output_layout.addWidget(self.m1_output_label)
 
         m2_output_layout.addWidget( QLabel("Motor 2 Output") )
-        m2_output_layout.addWidget( QLabel(f"Motor Output: {M2_MOTOR_OUTPUT}"))
+        self.m2_output_label = QLabel(f"Motor Output: {self.M2_MOTOR_OUTPUT}")
+        m2_output_layout.addWidget(self.m2_output_label)
 
         m3_output_layout.addWidget( QLabel("Motor 3 Output") )
-        m3_output_layout.addWidget( QLabel(f"Motor Output: {M3_MOTOR_OUTPUT}"))
+        self.m3_output_label = QLabel(f"Motor Output: {self.M3_MOTOR_OUTPUT}")
+        m3_output_layout.addWidget(self.m3_output_label)
 
         m4_output_layout.addWidget( QLabel("Motor 4 Output") )
-        m4_output_layout.addWidget( QLabel(f"Motor Output: {M4_MOTOR_OUTPUT}"))
+        self.m4_output_label = QLabel(f"Motor Output: {self.M4_MOTOR_OUTPUT}")
+        m4_output_layout.addWidget(self.m4_output_label)
 
         motor_output_layout.addSpacing(20)
         motor_output_layout.addLayout(m1_output_layout)
@@ -184,3 +187,25 @@ class MotorsPage(QWidget):
         body_layout.addLayout(channel_layout)
 
         self.setLayout(body_layout)
+
+    def newData(self, data):
+        self.m1ProgressBar.setValue(data.get('motor_outputs')[0])
+        self.m2ProgressBar.setValue(data.get('motor_outputs')[1])
+        self.m3ProgressBar.setValue(data.get('motor_outputs')[2])
+        self.m4ProgressBar.setValue(data.get('motor_outputs')[3])
+
+        self.m1_output_label.setText(f"Motor Output: {data.get('motor_outputs')[4]}")
+        self.m2_output_label.setText(f"Motor Output: {data.get('motor_outputs')[5]}")
+        self.m3_output_label.setText(f"Motor Output: {data.get('motor_outputs')[6]}")
+        self.m4_output_label.setText(f"Motor Output: {data.get('motor_outputs')[7]}")
+
+        self.lx_rot_pbar.setValue(data.get('roll_rate'))
+        self.ly_rot_pbar.setValue(data.get('yaw_rate'))
+        self.lz_axis_pbar.setValue(data.get('pitch_rate'))
+
+        
+
+        self.M1_CURRENT_DRAW = data.get('motor_outputs')[8]
+        self.M2_CURRENT_DRAW = data.get('motor_outputs')[9]
+        self.M3_CURRENT_DRAW = data.get('motor_outputs')[10]
+        self.M4_CURRENT_DRAW = data.get('motor_outputs')[11]

@@ -30,8 +30,8 @@ class GroundReceive(QThread):
                     'roll_rate': random.random() * 10,
                     'pitch_rate': random.random() * 10,
                     'yaw_rate': random.random() * 10,
-                    'batery_voltages': [random.random() * 10 for i in range(0, 13)],
-                    'pitch_rate': [random.random() * 10 for i in range(0, 13)],
+                    'battery_voltages': [random.random() * 10 for i in range(0, 13)],
+                    'controller_rate': [random.random() * 10 for i in range(0, 16)],
                 }                
                 self.payload = TEST_PAYLOAD
                 self.new_data.emit(self.payload)

@@ -5,7 +5,7 @@ import sys
 
 
 class LoggingPage(QWidget):
-    def __init__(self, data):
+    def __init__(self):
         super(LoggingPage, self).__init__()
 
         body_layout = QVBoxLayout()

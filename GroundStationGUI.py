@@ -17,6 +17,8 @@ from PyQt5.QtWebEngineWidgets import QWebEngineView
 
 class GroundStationGUI(QWidget):
     image_resize = pyqtSignal(float, float)
+    new_home_info = pyqtSignal(dict)
+    new_motor_info = pyqtSignal(dict)
     def __init__(self):
         super(GroundStationGUI, self).__init__()
         
@@ -31,7 +33,6 @@ class GroundStationGUI(QWidget):
         # Flag variable for switching video and map view
         self.switchFlag = True
         
-
         # Create the video stream
         self.videoFeedWorker = VideoFeedWorker()
         self.image_resize.connect(self.videoFeedWorker.scaled)
@@ -40,32 +41,8 @@ class GroundStationGUI(QWidget):
         self.videoFeedWorker.ImageUpdate.connect(self.imageUpdateSlot)
 
         self.dataStream = GroundReceive()
-        self.new_data = {
-          'motor_outputs': [0 for i in range(0,12)],
-          'gps_data': {
-              'lat': 0,
-              'lon': 0,
-              'alt': 0,
-          },
-          'climb_rate': 0,
-          'track': 0,
-          'heading': 0,
-          'air_speed': 0,
-          'ground_speed': 0,
-          'imu_data': {
-              'yaw': 0,
-              'pitch': 0,
-              'roll': 0,
-          },
-          'roll_rate': 0,
-          'pitch_rate': 0,
-          'yaw_rate': 0,
-          'batery_voltages': [0 for i in range(0, 13)],
-          'pitch_rate': [0 for i in range(0, 13)],
-          }
-        self.dataStream.new_data.connect(self.getNewData)
         self.dataStream.start()
-        
+        self.dataStream.new_data.connect(self.getNewData)
 
         # Create the map view for the homepage
         self.map_layout = QVBoxLayout()
@@ -129,10 +106,10 @@ class GroundStationGUI(QWidget):
         header.addWidget(self.loggingButton, 2)
 
         # Create the stacks for the different pages
-        self.stackHomePage = HomePage(self.map_layout, self.videoFeedLabel, self.new_data)
-        self.stackMotorsPage = MotorsPage(self.new_data)
+        self.stackHomePage = HomePage(self.map_layout, self.videoFeedLabel)
+        self.stackMotorsPage = MotorsPage()
         self.stackSetupPage = SetupPage()
-        self.stackLoggingPage = LoggingPage(self.new_data)
+        self.stackLoggingPage = LoggingPage()
 
         # Add stack to StackedWidget
         stack = QStackedWidget(self)
@@ -140,6 +117,9 @@ class GroundStationGUI(QWidget):
         stack.addWidget(self.stackMotorsPage)
         stack.addWidget(self.stackSetupPage)
         stack.addWidget(self.stackLoggingPage)
+
+        self.new_home_info.connect(self.stackHomePage.newData)
+        self.new_motor_info.connect(self.stackMotorsPage.newData)
 
         # Set push button clicked methods to switch the page
         self.homeButton.clicked.connect(lambda: stack.setCurrentIndex(HOME_PAGE))
@@ -164,8 +144,8 @@ class GroundStationGUI(QWidget):
       self.image_resize.emit(self.stackHomePage.getLayout().geometry().width(), self.stackHomePage.getLayout().geometry().height())
 
     def getNewData(self, payload):
-      self.new_data = payload
-      print(self.new_data.get('imu_data').get('roll'))
+      self.new_home_info.emit(payload)
+      self.new_motor_info.emit(payload)
 
 # Run the application
 def main():

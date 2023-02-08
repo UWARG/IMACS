@@ -12,29 +12,34 @@ Folium in PyQt5
 
 
 class HomePage(QWidget):
-    def __init__(self, map_layout, video_layout, data):
+    new_heading_data = pyqtSignal(dict)
+    def __init__(self, map_layout, video_layout):
         super(HomePage, self).__init__()
         self.videoLayout = video_layout
         self.mapLayout = map_layout
-        self.data = data 
-        self.headingIndicator = HeadingWidget(self.videoLayout, self.data)
+        self.headingIndicator = HeadingWidget(self.videoLayout)
+        self.new_heading_data.connect(self.headingIndicator.newData)
         # Create the Home page UI here
         body_layout = QHBoxLayout()
         self.left_layout = QVBoxLayout()
-        information_layout= QVBoxLayout()
-        altitude = self.data.get('gps_data').get('alt')
-        ground_speed = self.data.get('ground_speed')
-        battery = self.data.get('batery_voltages')
-        flight_time = 0 
-        vertical_speed = 0 
+        self.information_layout= QVBoxLayout()
+        self.altitude = 0
+        self.ground_speed = 0
+        self.battery = 0
+        self.flight_time = 0 
+        self.vertical_speed = 0 
+
+        self.altitude_label = QLabel(self.tr(f"Altitude: {self.altitude}"))
+        self.ground_speed_label = QLabel(f"Ground Speed: {self.ground_speed}")
+        self.battery_label = QLabel(f"Battery(V): {self.battery}")
 
         # Layout for the left side of the screen
-        information_layout.addWidget(QLabel("Drone Information"))
-        information_layout.addWidget(QLabel(f"Altitude: {altitude}"))
-        information_layout.addWidget(QLabel(f"Ground Speed: {ground_speed}" ))
-        information_layout.addWidget(QLabel(f"Battery(V): {battery}"))
-        information_layout.addWidget(QLabel(f"Fight Time: {flight_time}"))
-        information_layout.addWidget(QLabel(f"Vertical Speed: {vertical_speed}"))
+        self.information_layout.addWidget(QLabel("Drone Information"))
+        self.information_layout.addWidget(self.altitude_label)
+        self.information_layout.addWidget(self.ground_speed_label)
+        self.information_layout.addWidget(self.battery_label)
+        self.information_layout.addWidget(QLabel(f"Fight Time: {self.flight_time}"))
+        self.information_layout.addWidget(QLabel(f"Vertical Speed: {self.vertical_speed}"))
         
         # self.mapLayout = map_layout
         # coordinate = (48.5107057, -71.6516848)
@@ -52,9 +57,8 @@ class HomePage(QWidget):
         # webView.setHtml(data.getvalue().decode())
         # self.mapLayout.addWidget(webView)
         
-
         # Layout for the body of the page
-        self.left_layout.addLayout(information_layout)
+        self.left_layout.addLayout(self.information_layout)
         self.left_layout.addLayout(self.headingIndicator)
 
         body_layout.addLayout(self.left_layout)
@@ -63,4 +67,10 @@ class HomePage(QWidget):
 
     def getLayout(self):
         return self.headingIndicator
+
+    def newData(self, data):
+        self.altitude_label.setText(f"Altitude: {round(data.get('gps_data').get('alt'), 3)}")
+        self.ground_speed_label.setText(f"Ground Speed: {round(data.get('ground_speed'), 3)}")
+        self.battery_label.setText(f"Battery(V): {round(data.get('battery_voltages')[0], 3)}")
+        self.new_heading_data.emit(data)
     
