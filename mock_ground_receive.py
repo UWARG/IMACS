@@ -1,4 +1,5 @@
 import random
+from AccessData import AccessData 
 
 from structs import GroundStationData, SensorData, PIDValues, PIDController, GroundStationPIDSetResponse, Header
 
@@ -19,15 +20,17 @@ class GroundReceive():
             raise Exception("Unknown packet type")
 
     def __decode_ground_station_data(self, driver_packet):
+        motor_outputs_retriever = AccessData(msg=driver_packet.motor_outputs, start_index=0)
+        battery_voltage_retirever = AccessData(msg=driver_packet.battery_voltages, start_index=0)
+        controller_values_retriever = AccessData(msg=driver_packet.controller_values, start_index=0)
         self.payload = {
-            'motor_outputs' : driver_packet.motor_outputs,
+            'motor_outputs': [motor_outputs_retriever.get_data(data_type="B") for i in range(0, 12)], # list of 12 uint8_t
             'gps_data': {
-                'Latitude' : driver_packet.data.latitude,
-                'Longitude' : driver_packet.data.longitude,
-                'Altitude' : driver_packet.data.altitude,
+                'lat' : driver_packet.data.latitude,
+                'lon' : driver_packet.data.longitude,
+                'alt' : driver_packet.data.altitude,
             },  
             'climb_rate': driver_packet.data.climb_rate,
-            'track': None,
             'heading': driver_packet.data.heading,
             'air_speed': driver_packet.data.air_speed,
             'ground_Speed': driver_packet.data.ground_speed,
@@ -39,17 +42,18 @@ class GroundReceive():
             'roll_rate': driver_packet.data.roll_rate,
             'pitch_rate': driver_packet.data.pitch_rate,
             'yaw_rate': driver_packet.data.yaw_rate,
-            'Battery_Voltages': driver_packet.battery_voltages,
-            'Controller_Values':  driver_packet.controller_values,
+            'battery_voltages': [battery_voltage_retirever.get_data(data_type="B") for i in range(0, 13)],
+            'controller_voltages':  [controller_values_retriever.get_data(data_type="B") for i in range(0, 16)],
         }
+
     def __decode_pid_set_response(self, driver_packet):
-        self.ground_station_pid_set_response_payload = {
-            "flag": driver_packet.header.flag,
-            "length": driver_packet.header.length,
-            "type": driver_packet.header.type,
-            "controller_number": driver_packet.controller_number,
+        self.pid_set_response = {
+            "flag": AccessData(msg=driver_packet.header.flag, start_index=0).get_data(data_type="B"),
+            "length": AccessData(msg=driver_packet.header.length, start_index=0).get_data(data_type="H"),
+            "type": AccessData(msg=driver_packet.header.type, start_index=0).get_data(data_type="B"),
+            "controller_number": AccessData(msg=driver_packet.controller_number, start_index=0).get_data(data_type="B"),
             "controller": [ {"P": driver_packet.controller.axes[i].P, "I": driver_packet.controller.axes[i].I, "D": driver_packet.controller.axes[i].D } for i in range(0,6)],
-            "crc": driver_packet.crc,
+            "crc": AccessData(msg=driver_packet.crc, start_index=0).get_data(data_type="f"),
         }
 
     def __gen_mock_packet(self):
@@ -71,10 +75,12 @@ class GroundReceive():
 
     def mock_receive(self):
         while True:
-            if random.randint(0, 1000000) == 1:
+            if random.randint(0, 10000000) == 1:
                 mock_packet = self.__gen_mock_packet()
                 self.__decode(mock_packet)
-                print(self.ground_station_pid_set_response_payload)
+            if self.pid_set_response != None:
+                print(self.pid_set_response)
+            if self.payload != None:
                 print(self.payload)
         
 
