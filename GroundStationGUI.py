@@ -2,7 +2,6 @@
 # Make data thread for rotating indicator (might have to edit picture)
 
 import sys
-import folium
 import io
 from HomePage import HomePage
 from MotorsPage import MotorsPage
@@ -10,10 +9,13 @@ from SetupPage import SetupPage
 from LoggingPage import LoggingPage
 from cameraThread import VideoFeedWorker
 from mock_ground_receive import GroundReceive
+from SetupPage import reloadMap
+import folium
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtWebEngineWidgets import QWebEngineView
+
 
 class GroundStationGUI(QWidget):
     image_resize = pyqtSignal(float, float)
@@ -149,9 +151,13 @@ class GroundStationGUI(QWidget):
 
 # Run the application
 def main():
-   app = QApplication(sys.argv)
-   GUI = GroundStationGUI()
-   sys.exit(app.exec_())
+    app = QApplication(sys.argv)
+    GUI = GroundStationGUI()
+    timer = QTimer()
+    timer.timeout.connect(reloadMap)  # execute `display_time`
+    timer.setInterval(5000)  # 1000ms = 1s
+    timer.start()
+    sys.exit(app.exec_())
 	
 if __name__ == '__main__':
   main()
