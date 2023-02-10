@@ -9,7 +9,6 @@ from SetupPage import SetupPage
 from LoggingPage import LoggingPage
 from cameraThread import VideoFeedWorker
 from mock_ground_receive import GroundReceive
-from SetupPage import reloadMap
 import folium
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
@@ -154,7 +153,7 @@ def main():
     app = QApplication(sys.argv)
     GUI = GroundStationGUI()
     timer = QTimer()
-    timer.timeout.connect(reloadMap)  # execute `display_time`
+    timer.timeout.connect(SetupPage().reloadMap)  # execute `display_time`
     timer.setInterval(5000)  # 1000ms = 1s
     timer.start()
     sys.exit(app.exec_())
