@@ -1,15 +1,18 @@
 import random
 from AccessData import AccessData 
+from rfd_driver.generic_comms_device import GenericCommsDevice
 
 from structs import GroundStationData, SensorData, PIDValues, PIDController, GroundStationPIDSetResponse, Header
 
 class GroundReceive():
-    def __init__(self, ground_station_data=None, pid_set_response=None):
+    def __init__(self, ground_station_data=None, pid_set_response=None, port="/dev/ttyUSB0", baudrate=115200):
         self.payload = ground_station_data
         self.pid_set_response = pid_set_response
+        self.receiver = GenericCommsDevice(port=port, baudrate=baudrate)
 
     def receive(self):
-        return self.mock_receive(self)
+        while True:
+            self.__decode(self.receiver.receive())
     
     def __decode(self, driver_packet):
         if type(driver_packet) == GroundStationData:
@@ -66,6 +69,7 @@ class GroundReceive():
             "crc": AccessData(msg=driver_packet.crc, start_index=0).get_data(data_type="f"), # float
         }
 
+    # This is just for mocking messages for gui
     def __gen_mock_packet(self):
         if random.randint(0,1) == 1:
             header = Header(b'\x00', b'\x00\x01', b'\x01')
@@ -83,6 +87,7 @@ class GroundReceive():
             controller = PIDController(pid_values)
             return GroundStationPIDSetResponse(header, controller_number, controller, crc)
 
+    # This is just for mocking messages for gui
     def mock_receive(self):
         while True:
             if random.randint(0, 1000000) == 1:
