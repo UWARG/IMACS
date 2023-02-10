@@ -12,7 +12,9 @@ class GroundReceive():
 
     def receive(self):
         while True:
-            self.__decode(self.receiver.receive())
+            msg_info = self.receiver.receive()
+            if msg_info[0]:
+                self.__decode(msg_info[1])
     
     def __decode(self, driver_packet):
         if type(driver_packet) == GroundStationData:
