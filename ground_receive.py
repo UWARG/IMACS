@@ -1,4 +1,3 @@
-import random
 from AccessData import AccessData 
 from rfd_driver.generic_comms_device import GenericCommsDevice
 from rfd_driver.TelemMessages.GroundStationData import GroundStationData
