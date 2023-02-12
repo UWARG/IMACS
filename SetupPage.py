@@ -8,10 +8,43 @@ from PyQt5.QtWebEngineWidgets import QWebEngineView  # pip install PyQtWebEngine
 Folium in PyQt5
 """
 
+
 class SetupPage(QWidget):
+    coordinate=(48.5107057, -71.6516848)
+
+    def newData(self, data):
+        SetupPage.coordinate=(data.get('gps_data').get('lat'), data.get('gps_data').get('lon'))
+        print(SetupPage.coordinate)
+
+    def reloadMap():
+        global count
+        global webView
+        webView.setParent(None)
+        m = folium.Map(
+            tiles='Stamen Terrain',
+            zoom_start=13,
+            location=SetupPage.coordinate
+        )
+        folium.Marker(
+            SetupPage.coordinate, popup=SetupPage.coordinate,
+            icon=folium.Icon(color='blue' , icon='plane' , icon_color='black', draggable=True)
+        ).add_to(m)
+        data = io.BytesIO()
+        m.save(data, close_file=False)
+        webView = QWebEngineView()
+        webView.setHtml(data.getvalue().decode())
+        layout.addWidget(webView)
+        count=count+1
+        count = count+1
+
+    
+        
     def __init__(self):
         super(SetupPage, self).__init__()
-
+        global count
+        global webView
+        global layout
+        count=0
         # Create the Setup page UI here
         layout = QHBoxLayout()
         lwaypoint_layout = QVBoxLayout()
@@ -20,41 +53,29 @@ class SetupPage(QWidget):
         waypoint_layout = QHBoxLayout()
         formLayout = QHBoxLayout()
         makeForm(formLayout)
-
-
         mapLayout = QHBoxLayout()
-        coordinate = (48.5107057, -71.6516848)
         m = folium.Map(
             # tiles='Stamen Terrain',
             tiles='http://localhost:8888/tiles/{z}/{x}/{y}.png',
             zoom_start=14,
-            location=coordinate,
+            location=SetupPage.coordinate,
             attr="alma map"
         )
-        folium.Marker(
-            location = [48.5107057, -71.6516848], 
-            popup='drone',
-            # tooltip=tooltip,
-            icon=folium.Icon(color='blue' , icon='plane' , icon_color='black', draggable=True)
-        ).add_to(m)
-
-        
-
 
         # save map data to data object
-        data = io.BytesIO()
-        m.save(data, close_file=False)
+        dataMap = io.BytesIO()
+        m.save(dataMap, close_file=False)
 
         webView = QWebEngineView()
-        webView.setHtml(data.getvalue().decode())
+        webView.setHtml(dataMap.getvalue().decode())
         mapLayout.addWidget(webView)
-        
-        layout.addLayout(mapLayout)        
+
         layout.addLayout(right_layout)
-        
+
         right_layout.addLayout(formLayout)
         right_layout.addLayout(waypoint_layout)
-        
+        layout.addLayout(mapLayout)
+
         self.createWaypointGrid(formLayout)
 
         layout_1 = QHBoxLayout()
@@ -285,21 +306,19 @@ class SetupPage(QWidget):
         waypoint_layout.addLayout(rwaypoint_layout)
 
         self.setLayout(layout)
-        
-
-        
 
         # TO-DO: QFormLayout shell
 
-    def createWaypointGrid(self,formLayout):
+    def createWaypointGrid(self, formLayout):
         gridLayout = QGridLayout()
         gridShell = QFormLayout()
         self.showWaypointButton = QPushButton("+")
         self.hideWaypointButton = QPushButton("-")
-        gridLayout.addWidget(self.showWaypointButton,0,0)
-        gridLayout.addWidget(self.hideWaypointButton,0,1)
+        gridLayout.addWidget(self.showWaypointButton, 0, 0)
+        gridLayout.addWidget(self.hideWaypointButton, 0, 1)
         gridShell.addRow(gridLayout)
         formLayout.addLayout(gridShell)
+
 
 def makeForm(formLayout):
     theFormLayout = QFormLayout()
