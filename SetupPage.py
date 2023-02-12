@@ -8,33 +8,36 @@ from PyQt5.QtWebEngineWidgets import QWebEngineView  # pip install PyQtWebEngine
 Folium in PyQt5
 """
 
+
 class SetupPage(QWidget):
-    
-    def reloadMap(self, data):
+    coordinate=(48.5107057, -71.6516848)
+
+    def newData(self, data):
+        SetupPage.coordinate=(data.get('gps_data').get('lat'), data.get('gps_data').get('lon'))
+        # print(SetupPage.coordinate)
+
+    def reloadMap():
         global count
         global webView
-        global layout
         webView.setParent(None)
-        coordinate = (data.get('lat'), data.get('lon'))
         m = folium.Map(
-            # tiles='Stamen Terrain',
-            # zoom_start=13,
-            # location=coordinate
-            tiles='http://localhost:8888/tiles/{z}/{x}/{y}.png',
-            zoom_start=14,
-            location=coordinate,
-            attr="alma map",
-            icon=folium.Icon(color='blue' , icon='plane' , icon_color='black')
+            tiles='Stamen Terrain',
+            zoom_start=13,
+            location=SetupPage.coordinate
         )
         folium.Marker(
-            coordinate, popup=coordinate
+            SetupPage.coordinate, popup=SetupPage.coordinate,
+            icon=folium.Icon(color='blue' , icon='plane' , icon_color='black', draggable=True)
         ).add_to(m)
-        dataMap = io.BytesIO()
-        m.save(dataMap, close_file=False)
+        data = io.BytesIO()
+        m.save(data, close_file=False)
         webView = QWebEngineView()
-        webView.setHtml(dataMap.getvalue().decode())
+        webView.setHtml(data.getvalue().decode())
         layout.addWidget(webView)
+        count=count+1
         count = count+1
+
+    
         
     def __init__(self):
         super(SetupPage, self).__init__()
@@ -51,12 +54,11 @@ class SetupPage(QWidget):
         formLayout = QHBoxLayout()
         makeForm(formLayout)
         mapLayout = QHBoxLayout()
-        coordinate = (48.5107057, -71.6516848)
         m = folium.Map(
             # tiles='Stamen Terrain',
             tiles='http://localhost:8888/tiles/{z}/{x}/{y}.png',
             zoom_start=14,
-            location=coordinate,
+            location=SetupPage.coordinate,
             attr="alma map"
         )
 

@@ -94,8 +94,8 @@ class GroundReceive(QThread):
             if random.randint(0, 1000000) == 1:
                 mock_packet = self.__gen_mock_packet()
                 self.__decode(mock_packet)
-            if self.pid_set_response != None:
-                print(self.pid_set_response)
+            # if self.pid_set_response != None:
+            #     print(self.pid_set_response)
             if self.payload != None:
                 self.new_data.emit(self.payload)
         
