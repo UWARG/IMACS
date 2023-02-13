@@ -34,25 +34,25 @@ class GroundReceive(QThread):
             'gps_data': {
                 'lat' : driver_packet.data.latitude, # double, map
                 'lon' : driver_packet.data.longitude, # double, map
-                'alt' : driver_packet.data.altitude, # float, 
+                'alt' : driver_packet.data.altitude, # float, home
             },  
-            'climb_rate': driver_packet.data.climb_rate, # float
-            'heading': driver_packet.data.heading, # float
-            'air_speed': driver_packet.data.air_speed, # float
-            'ground_speed': driver_packet.data.ground_speed, # float
+            'climb_rate': driver_packet.data.climb_rate, # float, home
+            'heading': driver_packet.data.heading, # float, home
+            'air_speed': driver_packet.data.air_speed, # float, planning home
+            'ground_speed': driver_packet.data.ground_speed, # float, home
             'imu_data':{
-                'roll': driver_packet.data.roll, # float
-                'pitch': driver_packet.data.pitch, # float
-                'yaw': driver_packet.data.yaw, # float
+                'roll': driver_packet.data.roll, # float, home
+                'pitch': driver_packet.data.pitch, # float, home
+                'yaw': driver_packet.data.yaw, # float, not sure where
             },
-            'roll_rate': driver_packet.data.roll_rate, # float
-            'pitch_rate': driver_packet.data.pitch_rate, # float
-            'yaw_rate': driver_packet.data.yaw_rate, # float
-            'battery_voltages': [battery_voltage_retirever.get_data(data_type="B") for i in range(0, 13)], # list of 13 ints
-            'controller_voltages':  [controller_values_retriever.get_data(data_type="B") for i in range(0, 16)], # list of 16 ints
-            'flag': AccessData(msg=driver_packet.header.flag, start_index=0).get_data(data_type="B"), # int
-            'length': AccessData(msg=driver_packet.header.length, start_index=0).get_data(data_type="H"), # short
-            'type': AccessData(msg=driver_packet.header.type, start_index=0).get_data(data_type="B"), # int
+            'roll_rate': driver_packet.data.roll_rate, # float , motor
+            'pitch_rate': driver_packet.data.pitch_rate, # float , motor
+            'yaw_rate': driver_packet.data.yaw_rate, # float , motor
+            'battery_voltages': [battery_voltage_retirever.get_data(data_type="B") for i in range(0, 13)], # list of 13 ints, [0] is show in home
+            'controller_voltages':  [controller_values_retriever.get_data(data_type="B") for i in range(0, 16)], # list of 16 ints, none
+            'flag': AccessData(msg=driver_packet.header.flag, start_index=0).get_data(data_type="B"), # int, none
+            'length': AccessData(msg=driver_packet.header.length, start_index=0).get_data(data_type="H"), # short, none
+            'type': AccessData(msg=driver_packet.header.type, start_index=0).get_data(data_type="B"), # int, none
         }
 
     def __decode_pid_set_response(self, driver_packet):

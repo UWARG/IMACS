@@ -56,9 +56,9 @@ class HomePage(QWidget):
 
     def newData(self, data):
         self.altitude_label.setText(f"Altitude: {round(data.get('gps_data').get('alt'), 3)}")
-        self.ground_speed_label.setText(f"Ground Speed: {round(data.get('ground_speed'), 3)}")
-        self.battery_label.setText(f"Battery(V): {round(data.get('battery_voltages')[0], 3)}")
+        self.ground_speed_label.setText("Ground Speed: 0")
+        self.battery_label.setText("Battery(V): 0")
         #self.flight_label.setText(f"Flight Time: {round(data.get(''))}")
-        self.airspeed_label.setText(f"Airspeed: {round(data.get('air_speed'), 3)}")
+        self.airspeed_label.setText("Airspeed: 0")
         self.new_heading_data.emit(data)
     
