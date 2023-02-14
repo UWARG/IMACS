@@ -20,6 +20,8 @@ class GroundStationGUI(QWidget):
     image_resize = pyqtSignal(float, float)
     new_home_info = pyqtSignal(dict)
     new_motor_info = pyqtSignal(dict)
+    new_setup_info = pyqtSignal(dict)
+    
     def __init__(self):
         super(GroundStationGUI, self).__init__()
         
@@ -121,6 +123,7 @@ class GroundStationGUI(QWidget):
 
         self.new_home_info.connect(self.stackHomePage.newData)
         self.new_motor_info.connect(self.stackMotorsPage.newData)
+        self.new_setup_info.connect(self.stackMotorsPage.newData)
 
         # Set push button clicked methods to switch the page
         self.homeButton.clicked.connect(lambda: stack.setCurrentIndex(HOME_PAGE))
@@ -147,13 +150,14 @@ class GroundStationGUI(QWidget):
     def getNewData(self, payload):
       self.new_home_info.emit(payload)
       self.new_motor_info.emit(payload)
+      self.new_setup_info.emit(payload)
 
 # Run the application
 def main():
     app = QApplication(sys.argv)
     GUI = GroundStationGUI()
     timer = QTimer()
-    timer.timeout.connect(SetupPage().reloadMap)  # execute `display_time`
+    timer.timeout.connect(SetupPage.reloadMap)  # execute `display_time`
     timer.setInterval(5000)  # 1000ms = 1s
     timer.start()
     sys.exit(app.exec_())
