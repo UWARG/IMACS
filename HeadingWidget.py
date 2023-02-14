@@ -67,8 +67,8 @@ class HeadingWidget(QVBoxLayout):
         self.addWidget(self.view)
     
     def newData(self, data):
-        self.circlegraphic_pixmap.setRotation(data.get('imu_data').get('roll'))
-        self.compassgraphic_pixmap.setRotation(data.get('heading'))
+        self.circlegraphic_pixmap.setRotation(0)
+        self.compassgraphic_pixmap.setRotation(0)
         
 
 
