@@ -1,7 +1,7 @@
 from AccessData import AccessData 
-from rfd_driver.py.generic_comms_device import GenericCommsDevice
-from rfd_driver.py.TelemMessages.GroundStationData import GroundStationData
-from rfd_driver.py.TelemMessages.GroundStationPIDSetResponse import GroundStationPIDSetResponse
+from rfd_driver.comms.modules.generic_comms_device import GenericCommsDevice
+from rfd_driver.comms.modules.TelemMessages.GroundStationData import GroundStationData
+from rfd_driver.comms.modules.TelemMessages.GroundStationPIDSetResponse import GroundStationPIDSetResponse
 
 
 class GroundReceive():
