@@ -1,3 +1,6 @@
+# import sys
+# sys.path.append("rfd_driver")
+# sys.path.append("rfd_driver/py")
 from AccessData import AccessData 
 from rfd_driver.py.generic_comms_device import GenericCommsDevice
 from rfd_driver.py.TelemMessages.GroundStationData import GroundStationData
@@ -15,6 +18,15 @@ class GroundReceive():
             msg_info = self.receiver.receive()
             if msg_info[0]:
                 self.__decode(msg_info[1])
+                print("Payload:", this.payload)
+                print("PID Set Response:", this.pid_set_response)
+
+    # Receive data from RFD
+    # def receive(self):
+    #     while True:
+    #         msg_info = self.receiver.receive()
+    #         if msg_info[0]:
+    #             self.__decode(msg_info[1])
     
     def __decode(self, driver_packet):
         if type(driver_packet) == GroundStationData:
