@@ -1,7 +1,11 @@
+# from PyQt5.QtCore import *
+# from PyQt5.QtGui import *
+# from PyQt5.QtWidgets import *
+
 from AccessData import AccessData 
-from rfd_driver.py.generic_comms_device import GenericCommsDevice
-from rfd_driver.py.TelemMessages.GroundStationData import GroundStationData
-from rfd_driver.py.TelemMessages.GroundStationPIDSetResponse import GroundStationPIDSetResponse
+from common.comms.modules.generic_comms_device import GenericCommsDevice
+from common.comms.modules.TelemMessages.GroundStationData import GroundStationData
+from common.comms.modules.TelemMessages.GroundStationPIDSetResponse import GroundStationPIDSetResponse
 
 
 class GroundReceive():
@@ -11,10 +15,9 @@ class GroundReceive():
         self.receiver = GenericCommsDevice(port=port, baudrate=baudrate)
 
     def receive(self):
-        while True:
-            msg_info = self.receiver.receive()
-            if msg_info[0]:
-                self.__decode(msg_info[1])
+        msg_info = self.receiver.receive()
+        if msg_info[0]:
+            self.__decode(msg_info[1])
     
     def __decode(self, driver_packet):
         if type(driver_packet) == GroundStationData:
@@ -70,3 +73,15 @@ class GroundReceive():
                 ],
             "crc": AccessData(msg=driver_packet.crc, start_index=0).get_data(data_type="f"), # float
         }
+
+
+# class GroundReceive(QThread):
+#     new_data = pyqtSignal(dict)
+#     receiver = GroundReceive()
+#     def run(self, receiver=receiver):
+#         self.threadActive = True
+#         # Mocks actual data coming from RFD
+#         while self.threadActive:
+#             receiver.receive()
+#             self.payload = receiver.payload
+#             self.new_data.emit(self.payload)
