@@ -58,9 +58,9 @@ class GroundReceive():
             'yaw_rate': driver_packet.data.yaw_rate, # float
             'battery_voltages': [battery_voltage_retirever.get_data(data_type="B") for i in range(0, 13)], # list of 13 ints
             'controller_voltages':  [controller_values_retriever.get_data(data_type="B") for i in range(0, 16)], # list of 16 ints
-            'flag': AccessData(msg=driver_packet.header.flag, start_index=0).get_data(data_type="B"), # int
+            'flag': driver_packet.header.flag, #AccessData(msg=driver_packet.header.flag, start_index=0).get_data(data_type="B"), # int
             'length': AccessData(msg=driver_packet.header.length, start_index=0).get_data(data_type="H"), # short
-            'type': AccessData(msg=driver_packet.header.type, start_index=0).get_data(data_type="B"), # int
+            'type': driver_packet.header.type #AccessData(msg=driver_packet.header.type, start_index=0).get_data(data_type="B"), # int
         }
 
     def __decode_pid_set_response(self, driver_packet):
