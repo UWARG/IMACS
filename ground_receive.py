@@ -9,15 +9,20 @@ from common.comms.modules.TelemMessages.GroundStationPIDSetResponse import Groun
 
 
 class GroundReceive():
-    def __init__(self, ground_station_data=None, pid_set_response=None, port="/dev/ttyUSB0", baudrate=115200):
+    def __init__(self, ground_station_data, pid_set_response, port, baudrate):
         self.payload = ground_station_data
         self.pid_set_response = pid_set_response
         self.receiver = GenericCommsDevice(port=port, baudrate=baudrate)
 
     def receive(self):
-        msg_info = self.receiver.receive()
-        if msg_info[0]:
-            self.__decode(msg_info[1])
+        result, msg_info = self.receiver.receive()
+        print(msg_info)
+        print(result)
+        if result is False:
+            return
+
+        if result:
+            self.__decode(msg_info)
     
     def __decode(self, driver_packet):
         if type(driver_packet) == GroundStationData:
