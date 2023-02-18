@@ -22,7 +22,6 @@ if __name__ == "__main__":
 
         print(type(out))
         print(out.header.type)
-        print(out.arm)
 
 
 
