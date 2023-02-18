@@ -1,6 +1,6 @@
-# from PyQt5.QtCore import *
-# from PyQt5.QtGui import *
-# from PyQt5.QtWidgets import *
+from PyQt5.QtCore import *
+from PyQt5.QtGui import *
+from PyQt5.QtWidgets import *
 
 from AccessData import AccessData 
 from common.comms.modules.generic_comms_device import GenericCommsDevice
@@ -8,8 +8,8 @@ from common.comms.modules.TelemMessages.GroundStationData import GroundStationDa
 from common.comms.modules.TelemMessages.GroundStationPIDSetResponse import GroundStationPIDSetResponse
 
 
-class GroundReceive():
-    def __init__(self, ground_station_data, pid_set_response, port, baudrate):
+class GroundReceiveWorker():
+    def __init__(self, ground_station_data=None, pid_set_response=None, port="/dev/ttyUSB0", baudrate=115200):
         self.payload = ground_station_data
         self.pid_set_response = pid_set_response
         self.receiver = GenericCommsDevice(port=port, baudrate=baudrate)
@@ -80,13 +80,13 @@ class GroundReceive():
         }
 
 
-# class GroundReceive(QThread):
-#     new_data = pyqtSignal(dict)
-#     receiver = GroundReceive()
-#     def run(self, receiver=receiver):
-#         self.threadActive = True
-#         # Mocks actual data coming from RFD
-#         while self.threadActive:
-#             receiver.receive()
-#             self.payload = receiver.payload
-#             self.new_data.emit(self.payload)
+class GroundReceive(QThread):
+    new_data = pyqtSignal(dict)
+    receiver = GroundReceiveWorker()
+    def run(self, receiver=receiver):
+        self.threadActive = True
+        # Mocks actual data coming from RFD
+        while self.threadActive:
+            receiver.receive()
+            self.payload = receiver.payload
+            self.new_data.emit(self.payload)

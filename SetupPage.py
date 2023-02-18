@@ -13,17 +13,18 @@ class SetupPage(QWidget):
     coordinate=(48.5107057, -71.6516848)
 
     def newData(self, data):
-        SetupPage.coordinate=(data.get('gps_data').get('lat'), data.get('gps_data').get('lon'))
-        # print(SetupPage.coordinate)
+        SetupPage.coordinate=(data.get('gps_data').get('alt'), data.get('gps_data').get('alt'))
+        print(SetupPage.coordinate)
 
     def reloadMap():
         global count
         global webView
         webView.setParent(None)
         m = folium.Map(
-            tiles='Stamen Terrain',
-            zoom_start=13,
-            location=SetupPage.coordinate
+            tiles='http://localhost:8888/tiles/{z}/{x}/{y}.png',
+            zoom_start=14,
+            location=SetupPage.coordinate,
+            attr="alma map"
         )
         folium.Marker(
             SetupPage.coordinate, popup=SetupPage.coordinate,
@@ -34,10 +35,9 @@ class SetupPage(QWidget):
         webView = QWebEngineView()
         webView.setHtml(data.getvalue().decode())
         layout.addWidget(webView)
-        count=count+1
-        count = count+1
 
-    
+    def newData(self, data):
+        SetupPage.coordinate=(data.get('gps_data').get('alt'),data.get('gps_data').get('alt'))
         
     def __init__(self):
         super(SetupPage, self).__init__()

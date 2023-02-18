@@ -21,6 +21,7 @@ class GroundStationGUI(QWidget):
     new_home_info = pyqtSignal(dict)
     new_motor_info = pyqtSignal(dict)
     new_setup_info = pyqtSignal(dict)
+    
     def __init__(self):
         super(GroundStationGUI, self).__init__()
         
@@ -114,8 +115,7 @@ class GroundStationGUI(QWidget):
 
         self.new_home_info.connect(self.stackHomePage.newData)
         self.new_motor_info.connect(self.stackMotorsPage.newData)
-        self.new_setup_info.connect(self.stackSetupPage.newData)
-
+        self.new_setup_info.connect(self.stackMotorsPage.newData)
 
         # Set push button clicked methods to switch the page
         self.homeButton.clicked.connect(lambda: stack.setCurrentIndex(HOME_PAGE))
@@ -143,7 +143,6 @@ class GroundStationGUI(QWidget):
       self.new_home_info.emit(payload)
       self.new_motor_info.emit(payload)
       self.new_setup_info.emit(payload)
-
 
 # Run the application
 def main():
