@@ -9,10 +9,10 @@ from common.comms.modules.TelemMessages.GroundStationPIDSetResponse import Groun
 
 
 class GroundReceiveWorker():
-    def __init__(self, ground_station_data=None, pid_set_response=None, port="/dev/ttyUSB0", baudrate=115200):
+    def __init__(self, ground_station_data, pid_set_response, port):
         self.payload = ground_station_data
         self.pid_set_response = pid_set_response
-        self.receiver = GenericCommsDevice(port=port, baudrate=baudrate)
+        self.receiver = GenericCommsDevice(port=port, baudrate=115200)
 
     def receive(self):
         result, msg_info = self.receiver.receive()
@@ -82,11 +82,12 @@ class GroundReceiveWorker():
 
 class GroundReceive(QThread):
     new_data = pyqtSignal(dict)
-    receiver = GroundReceiveWorker()
+    receiver = GroundReceiveWorker(None, None, "COM5")
     def run(self, receiver=receiver):
         self.threadActive = True
         # Mocks actual data coming from RFD
         while self.threadActive:
             receiver.receive()
             self.payload = receiver.payload
-            self.new_data.emit(self.payload)
+            if self.payload is not None:
+                self.new_data.emit(self.payload)
