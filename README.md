@@ -9,7 +9,7 @@ To use the project locally on your machine:
     - `python -m venv <environment name>`
 - Activate the environment
     - `source <environment name>/bin/activate`
-- Get submodule
+- Add submodule
     - `git submodule init`
     - `git submodule update`
 - Install all required dependencies in the virtual environment
