@@ -15,7 +15,6 @@ class MockGroundReceiveWorker():
     def __init__(self, ground_station_data=None, pid_set_response=None):
         self.payload = ground_station_data
         self.pid_set_response = pid_set_response
-        self.data = []
         self.lock = threading.Lock()
         self.is_running = False
     
@@ -160,7 +159,6 @@ class MockGroundReceiveWorker():
             return self.payload
         
 
-    # def mock_receive(self):
     def receive(self):
         while self.is_running:
             time.sleep(0.1)
@@ -177,10 +175,6 @@ class MockGroundReceiveWorker():
         self.is_running = False
         # wait for the receive thread to finish
         self.receive_thread.join()
-        
-    def get_data(self):
-        with self.lock:
-            return self.data
 
 class DroneInfo:
     def __init__(self, groundReceiverWorker):

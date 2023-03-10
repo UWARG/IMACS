@@ -1,3 +1,6 @@
+import time
+import threading
+
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
@@ -13,11 +16,16 @@ class GroundReceiveWorker():
         self.payload = ground_station_data
         self.pid_set_response = pid_set_response
         self.receiver = GenericCommsDevice(port=port, baudrate=baudrate)
+        self.lock = threading.Lock()
+        self.is_running = False
 
     def receive(self):
-        msg_info = self.receiver.receive()
-        if msg_info[0]:
-            self.__decode(msg_info[1])
+        while self.is_running:
+            time.sleep(0.1)
+            msg_info = self.receiver.receive()
+            if msg_info[0]:
+                self.__decode(msg_info[1])
+    
     
     def __decode(self, driver_packet):
         if type(driver_packet) == GroundStationData:
@@ -75,13 +83,179 @@ class GroundReceiveWorker():
         }
 
 
+    def getCoordinates(self):
+        if self.payload is None:
+            return None
+        else:
+            return {
+                "latitude": self.payload["gps_data"]["lat"],
+                "longitude": self.payload["gps_data"]["lon"],
+            }
+    def getDroneInfo(self):
+        if self.payload is None:
+            return None
+        else:
+            return {
+                "altitude": self.payload["gps_data"]["alt"],
+                "ground_speed": self.payload["ground_speed"],
+                "battery": self.payload["battery_voltages"][0],
+                "airspeed": self.payload["air_speed"],
+            }
+        
+    def getMotorInfo(self):
+        if self.payload is None:
+            return None
+        else:
+            return self.payload["motor_outputs"]
+        
+    def getBatteryInfo(self):
+        if self.payload is None:
+            return None
+        else:
+            return self.payload["battery_voltages"]
+        
+
+    def getMotorOutputs(self):
+        if self.payload is None:
+            return None
+        else:
+            return self.payload["motor_outputs"]
+        
+    def getRotationInfo(self):
+        if self.payload is None:
+            return None
+        else:
+            return {
+                "roll": self.payload["roll_rate"],
+                "pitch": self.payload["pitch_rate"],
+                "yaw": self.payload["yaw_rate"],
+            }
+        
+    def getIMUData(self):
+        if self.payload is None:
+            return None
+        else:
+            return self.payload["imu_data"]
+        
+    def getThrottleInfo(self):
+        if self.payload is None:
+            return None
+        else:
+            return self.payload["throttle"]
+        
+    def getFullPayload(self):
+        if self.payload is None:
+            return None
+        else:
+            return self.payload
+        
+    def start(self):
+        self.is_running = True
+        # start a new thread for the receive function
+        self.receive_thread = threading.Thread(target=self.receive)
+        self.receive_thread.start()
+        
+    def stop(self):
+        self.is_running = False
+        # wait for the receive thread to finish
+        self.receive_thread.join()
+class DroneInfo:
+    def __init__(self, groundReceiverWorker):
+        self.groundReceiverWorker = groundReceiverWorker
+
+    def getData(self):
+        return self.groundReceiverWorker.getDroneInfo()
+    
+class Coordinates:
+    def __init__(self, groundReceiverWorker):
+        self.groundReceiverWorker = groundReceiverWorker
+
+    def getData(self):
+        return self.groundReceiverWorker.getCoordinates()
+
+
+class ThrottleInfo:
+    def __init__(self, groundReceiverWorker):
+        self.groundReceiverWorker = groundReceiverWorker
+
+    def getData(self):
+        return self.groundReceiverWorker.getMotorOutputs()
+
+class BatteryVoltages:
+    def __init__(self, groundReceiverWorker):
+        self.groundReceiverWorker = groundReceiverWorker
+
+    def getData(self):
+        return self.groundReceiverWorker.getBatteryInfo()
+
+class RotationInfo:
+    def __init__(self, groundReceiverWorker):
+        self.groundReceiverWorker = groundReceiverWorker
+
+    def getData(self):
+        return self.groundReceiverWorker.getRotationInfo()
+
+class IMUData:
+    def __init__(self, groundReceiverWorker):
+        self.groundReceiverWorker = groundReceiverWorker
+
+    def getData(self):
+        return self.groundReceiverWorker.getIMUData()
+
+class FullPayload:
+    def __init__(self, groundReceiverWorker):
+        self.groundReceiverWorker = groundReceiverWorker
+
+    def getData(self):
+        return self.groundReceiverWorker.getFullPayload()
+    
+
+def test_data_getter_classes():
+    """
+    run `python ground_receive.py` to test these classes with RFD
+    """
+    receiver = GroundReceiveWorker()
+    receiver.start()
+    imuDataGetter = IMUData(receiver)
+    rotationInfoGetter = RotationInfo(receiver)
+    batterVoltageGetter = BatteryVoltages(receiver)
+    throttleInfoGetter = ThrottleInfo(receiver)
+    coordinatesGetter = Coordinates(receiver)
+    droneInfoGetter = DroneInfo(receiver)
+
+    while True:
+        print(imuDataGetter.getData())
+        print(rotationInfoGetter.getData())
+        print(rotationInfoGetter.getData())
+        print(batterVoltageGetter.getData())
+        print(throttleInfoGetter.getData())
+        print(coordinatesGetter.getData())
+        print(droneInfoGetter.getData())
+
+        time.sleep(0.1)
+
+if __name__ == "__main__":
+    test_data_getter_classes()
+
 class GroundReceive(QThread):
+    """
+    Make sure GroundReceive is being imported from the correct file
+    """
     new_data = pyqtSignal(dict)
     receiver = GroundReceiveWorker()
-    def run(self, receiver=receiver):
+    def __init__(self, receiver=receiver):
+        super().__init__()
+        self.receiver.start()
+        self.receiver = receiver
+        self.fullPayloadGetter = FullPayload(self.receiver)
+
+    def run(self):
+        print("running")
         self.threadActive = True
         # Mocks actual data coming from RFD
         while self.threadActive:
-            receiver.receive()
-            self.payload = receiver.payload
-            self.new_data.emit(self.payload)
+            time.sleep(0.1)
+            payload = self.fullPayloadGetter.getData()
+            if(payload != None):
+                self.new_data.emit(payload)
+        
