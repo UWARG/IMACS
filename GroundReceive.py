@@ -15,17 +15,17 @@ class GroundReceiveWorker():
     def __init__(self, ground_station_data=None, pid_set_response=None, port="/dev/ttyUSB0", baudrate=115200):
         self.payload = ground_station_data
         self.pid_set_response = pid_set_response
-        self.receiver = GenericCommsDevice(port=port, baudrate=baudrate)
         self.lock = threading.Lock()
         self.is_running = False
+        self.receiver = GenericCommsDevice(port=port, baudrate=baudrate)
 
+    
     def receive(self):
         while self.is_running:
             time.sleep(0.1)
             msg_info = self.receiver.receive()
             if msg_info[0]:
                 self.__decode(msg_info[1])
-    
     
     def __decode(self, driver_packet):
         if type(driver_packet) == GroundStationData:
@@ -61,17 +61,17 @@ class GroundReceiveWorker():
             'yaw_rate': driver_packet.data.yaw_rate, # float
             'battery_voltages': [battery_voltage_retirever.get_data(data_type="B") for i in range(0, 13)], # list of 13 ints
             'controller_voltages':  [controller_values_retriever.get_data(data_type="B") for i in range(0, 16)], # list of 16 ints
-            'flag': AccessData(msg=driver_packet.header.flag, start_index=0).get_data(data_type="B"), # int
+            'flag': driver_packet.header.flag, #AccessData(msg=driver_packet.header.flag, start_index=0).get_data(data_type="B"), # int
             'length': AccessData(msg=driver_packet.header.length, start_index=0).get_data(data_type="H"), # short
-            'type': AccessData(msg=driver_packet.header.type, start_index=0).get_data(data_type="B"), # int
+            'type': driver_packet.header.type #AccessData(msg=driver_packet.header.type, start_index=0).get_data(data_type="B"), # int
         }
 
     def __decode_pid_set_response(self, driver_packet):
         self.pid_set_response = {
-            "flag": AccessData(msg=driver_packet.header.flag, start_index=0).get_data(data_type="B"), # int
+            "flag": driver_packet.header.flag, #AccessData(msg=driver_packet.header.flag, start_index=0).get_data(data_type="B"), # int
             "length": AccessData(msg=driver_packet.header.length, start_index=0).get_data(data_type="H"), # short
-            "type": AccessData(msg=driver_packet.header.type, start_index=0).get_data(data_type="B"), # int
-            "controller_number": AccessData(msg=driver_packet.controller_number, start_index=0).get_data(data_type="B"), # int
+            "type": driver_packet.header.length, #AccessData(msg=driver_packet.header.type, start_index=0).get_data(data_type="B"), # int
+            "controller_number": driver_packet.controller_number, #AccessData(msg=driver_packet.controller_number, start_index=0).get_data(data_type="B"), # int
             "controller": [  # list of 6 dicts each with three floats (P, I, D)
                     {
                         "P": driver_packet.controller.axes[i].P, 
@@ -79,9 +79,8 @@ class GroundReceiveWorker():
                         "D": driver_packet.controller.axes[i].D 
                     } for i in range(0,6)
                 ],
-            "crc": AccessData(msg=driver_packet.crc, start_index=0).get_data(data_type="f"), # float
+            #"crc": AccessData(msg=driver_packet.crc, start_index=0).get_data(data_type="f"), # float
         }
-
 
     def getCoordinates(self):
         if self.payload is None:
@@ -101,12 +100,6 @@ class GroundReceiveWorker():
                 "battery": self.payload["battery_voltages"][0],
                 "airspeed": self.payload["air_speed"],
             }
-        
-    def getMotorInfo(self):
-        if self.payload is None:
-            return None
-        else:
-            return self.payload["motor_outputs"]
         
     def getBatteryInfo(self):
         if self.payload is None:
@@ -136,12 +129,6 @@ class GroundReceiveWorker():
             return None
         else:
             return self.payload["imu_data"]
-        
-    def getThrottleInfo(self):
-        if self.payload is None:
-            return None
-        else:
-            return self.payload["throttle"]
         
     def getFullPayload(self):
         if self.payload is None:
@@ -242,7 +229,16 @@ class GroundReceive(QThread):
     Make sure GroundReceive is being imported from the correct file
     """
     new_data = pyqtSignal(dict)
-    receiver = GroundReceiveWorker()
+    receiver = GroundReceiveWorker(port="COM5")
+    def run(self, receiver=receiver):
+        self.threadActive = True
+        # Mocks actual data coming from RFD
+        while self.threadActive:
+            receiver.receive()
+            self.payload = receiver.payload
+            if self.payload is not None:
+                self.new_data.emit(self.payload)
+
     def __init__(self, receiver=receiver):
         super().__init__()
         self.receiver.start()
