@@ -5,7 +5,7 @@ Expected behaviour is for no errors to be output in the terminal and for payload
 This has not at all been tested with RFDs yet.
 """
 
-from ground_receive import GroundReceive
+from GroundReceive import GroundReceive
 import time
 
 # Replace below with the name of the port the receiver RFD is connected to
@@ -20,7 +20,7 @@ while True:
     print("PAYLOAD", receiver.payload)
     print("pid_set_response", receiver.pid_set_response)
 
-# from ground_receive import GroundReceive
+# from GroundReceive import GroundReceive
 
 # # Replace below with the name of the port the receiver RFD is connected to
 # PORT = "COM5"
