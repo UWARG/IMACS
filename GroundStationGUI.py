@@ -3,12 +3,13 @@
 
 import sys
 import io
+from test import GroundReceive
 from HomePage import HomePage
 from MotorsPage import MotorsPage
 from SetupPage import SetupPage
 from LoggingPage import LoggingPage
 from cameraThread import VideoFeedWorker
-from MockGroundReceive import GroundReceive
+# from ground_receive import GroundReceive
 import folium
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
