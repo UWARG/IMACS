@@ -8,7 +8,7 @@ from MotorsPage import MotorsPage
 from SetupPage import SetupPage
 from LoggingPage import LoggingPage
 from cameraThread import VideoFeedWorker
-from ground_receive import GroundReceive
+from MockGroundReceive import GroundReceive
 import folium
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *

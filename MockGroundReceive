@@ -4,11 +4,10 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 
 from AccessData import AccessData 
-from common.comms.modules.generic_comms_device import GenericCommsDevice
-from common.comms.modules.TelemMessages.GroundStationData import GroundStationData
-from common.comms.modules.TelemMessages.GroundStationPIDSetResponse import GroundStationPIDSetResponse
+from MockStructs import PIDValues, GroundStationData, PIDController, GroundStationPIDSetResponse, GroundStationData, Header, SensorData
 
-class MockGroundReceive():
+
+class MockGroundReceiveWorker():
     def __init__(self, ground_station_data=None, pid_set_response=None):
         self.payload = ground_station_data
         self.pid_set_response = pid_set_response
@@ -99,7 +98,7 @@ class MockGroundReceive():
                 print(self.payload)
 
 
-class MockGroundReceive(QThread):
+class GroundReceive(QThread):
     new_data = pyqtSignal(dict)
     receiver = MockGroundReceiveWorker()
     def run(self, receiver=receiver):
