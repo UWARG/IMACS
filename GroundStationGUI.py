@@ -141,6 +141,7 @@ class GroundStationGUI(QWidget):
       self.image_resize.emit(self.stackHomePage.getLayout().geometry().width(), self.stackHomePage.getLayout().geometry().height())
 
     def getNewData(self, payload):
+      print("payload")
       self.new_home_info.emit(payload)
       self.new_motor_info.emit(payload)
       self.new_setup_info.emit(payload)

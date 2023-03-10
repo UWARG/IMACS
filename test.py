@@ -89,11 +89,12 @@ class MockGroundReceiveWorker():
         while True:
             if random.randint(0, 1000000) == 1:
                 mock_packet = self.__gen_mock_packet()
+                print("generating new mock packet")
                 self.__decode(mock_packet)
-            if self.pid_set_response != None:
-                print(self.pid_set_response)
-            if self.payload != None:
-                print(self.payload)
+            # if self.pid_set_response != None:
+            #     print(self.pid_set_response)
+            # if self.payload != None:
+            #     print(self.payload)
 
 
 class GroundReceive(QThread):

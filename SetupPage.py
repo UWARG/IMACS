@@ -13,8 +13,9 @@ class SetupPage(QWidget):
     coordinate=(48.5107057, -71.6516848)
 
     def newData(self, data):
+        print("getting new data setup page")
         SetupPage.coordinate=(data.get('gps_data').get('alt'), data.get('gps_data').get('alt'))
-        print(SetupPage.coordinate)
+        # print(SetupPage.coordinate)
 
     def reloadMap():
         global count
@@ -37,9 +38,11 @@ class SetupPage(QWidget):
         layout.addWidget(webView)
 
     def newData(self, data):
+        print("getting new data setup page")
         SetupPage.coordinate=(data.get('gps_data').get('alt'),data.get('gps_data').get('alt'))
         
     def __init__(self):
+        print("innittin gsetup pag")
         super(SetupPage, self).__init__()
         global count
         global webView
