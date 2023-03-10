@@ -91,3 +91,4 @@ class GroundReceive(QThread):
             self.payload = receiver.payload
             if self.payload is not None:
                 self.new_data.emit(self.payload)
+

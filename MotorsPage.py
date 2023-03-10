@@ -189,21 +189,22 @@ class MotorsPage(QWidget):
         self.setLayout(body_layout)
 
     def newData(self, data):
-        self.m1ProgressBar.setValue(data.get('motor_outputs')[0])
-        self.m2ProgressBar.setValue(data.get('motor_outputs')[1])
-        self.m3ProgressBar.setValue(data.get('motor_outputs')[2])
-        self.m4ProgressBar.setValue(data.get('motor_outputs')[3])
+        self.m1ProgressBar.setValue(0)
+        self.m2ProgressBar.setValue(0)
+        self.m3ProgressBar.setValue(0)
+        self.m4ProgressBar.setValue(0)
 
-        self.m1_output_label.setText(f"Motor Output: {data.get('motor_outputs')[4]}")
-        self.m2_output_label.setText(f"Motor Output: {data.get('motor_outputs')[5]}")
-        self.m3_output_label.setText(f"Motor Output: {data.get('motor_outputs')[6]}")
-        self.m4_output_label.setText(f"Motor Output: {data.get('motor_outputs')[7]}")
+        self.m1_output_label.setText(f"Motor Output: 0")
+        self.m2_output_label.setText(f"Motor Output: 0")
+        self.m3_output_label.setText(f"Motor Output: 0")
+        self.m4_output_label.setText(f"Motor Output: 0")
 
-        self.lx_rot_pbar.setValue(data.get('roll_rate'))
-        self.ly_rot_pbar.setValue(data.get('yaw_rate'))
-        self.lz_axis_pbar.setValue(data.get('pitch_rate'))
+        self.lx_rot_pbar.setValue(0)
+        self.ly_rot_pbar.setValue(0)
+        self.lz_axis_pbar.setValue(0)
 
         self.M1_CURRENT_DRAW = data.get('motor_outputs')[8]
         self.M2_CURRENT_DRAW = data.get('motor_outputs')[9]
         self.M3_CURRENT_DRAW = data.get('motor_outputs')[10]
         self.M4_CURRENT_DRAW = data.get('motor_outputs')[11]
+
