@@ -207,3 +207,7 @@ class MotorsPage(QWidget):
         self.M2_CURRENT_DRAW = data.get('motor_outputs')[9]
         self.M3_CURRENT_DRAW = data.get('motor_outputs')[10]
         self.M4_CURRENT_DRAW = data.get('motor_outputs')[11]
+<<<<<<< HEAD
+=======
+
+>>>>>>> 5ae02563d7a31d430a12692ff45598ba187889da

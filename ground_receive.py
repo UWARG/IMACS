@@ -82,7 +82,6 @@ class GroundReceiveWorker():
             #"crc": AccessData(msg=driver_packet.crc, start_index=0).get_data(data_type="f"), # float
         }
 
-
     def getCoordinates(self):
         if self.payload is None:
             return None
@@ -101,12 +100,6 @@ class GroundReceiveWorker():
                 "battery": self.payload["battery_voltages"][0],
                 "airspeed": self.payload["air_speed"],
             }
-        
-    def getMotorInfo(self):
-        if self.payload is None:
-            return None
-        else:
-            return self.payload["motor_outputs"]
         
     def getBatteryInfo(self):
         if self.payload is None:
@@ -136,12 +129,6 @@ class GroundReceiveWorker():
             return None
         else:
             return self.payload["imu_data"]
-        
-    def getThrottleInfo(self):
-        if self.payload is None:
-            return None
-        else:
-            return self.payload["throttle"]
         
     def getFullPayload(self):
         if self.payload is None:
