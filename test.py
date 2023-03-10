@@ -70,7 +70,7 @@ class MockGroundReceiveWorker():
     def __gen_mock_packet(self):
         if random.randint(0,1) == 1:
             header = Header(b'\x00', b'\x00\x01', b'\x01')
-            sensor_data = SensorData(random.randint(), random.randint(), random.randint(), random.randint(), random.randint(), random.randint(), 7.0, 8.0, 9.0, 10.0, 11.0, 12.0, 13.0)
+            sensor_data = SensorData(random.randint(0,12), random.randint(0,12), random.randint(0,12), random.randint(0,12), random.randint(0,12), random.randint(0,12), 7.0, 8.0, 9.0, 10.0, 11.0, 12.0, 13.0)
             motor_outputs = b'\x00\x01\x00\x01\x00\x01\x00\x01\x00\x01\x00\x01'
             battery_voltages = b'\x00\x01\x00\x01\x00\x01\x00\x01\x00\x01\x00\x01\x00'
             controller_values = b'\x00\x01\x00\x01\x00\x01\x00\x01\x00\x01\x00\x01\x00\x01\x00\x01'
