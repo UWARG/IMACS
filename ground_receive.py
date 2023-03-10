@@ -9,15 +9,20 @@ from common.comms.modules.TelemMessages.GroundStationPIDSetResponse import Groun
 
 
 class GroundReceiveWorker():
-    def __init__(self, ground_station_data=None, pid_set_response=None, port="/dev/ttyUSB0", baudrate=115200):
+    def __init__(self, ground_station_data, pid_set_response, port):
         self.payload = ground_station_data
         self.pid_set_response = pid_set_response
-        self.receiver = GenericCommsDevice(port=port, baudrate=baudrate)
+        self.receiver = GenericCommsDevice(port=port, baudrate=115200)
 
     def receive(self):
-        msg_info = self.receiver.receive()
-        if msg_info[0]:
-            self.__decode(msg_info[1])
+        result, msg_info = self.receiver.receive()
+        print(msg_info)
+        print(result)
+        if result is False:
+            return
+
+        if result:
+            self.__decode(msg_info)
     
     def __decode(self, driver_packet):
         if type(driver_packet) == GroundStationData:
@@ -53,17 +58,17 @@ class GroundReceiveWorker():
             'yaw_rate': driver_packet.data.yaw_rate, # float
             'battery_voltages': [battery_voltage_retirever.get_data(data_type="B") for i in range(0, 13)], # list of 13 ints
             'controller_voltages':  [controller_values_retriever.get_data(data_type="B") for i in range(0, 16)], # list of 16 ints
-            'flag': AccessData(msg=driver_packet.header.flag, start_index=0).get_data(data_type="B"), # int
+            'flag': driver_packet.header.flag, #AccessData(msg=driver_packet.header.flag, start_index=0).get_data(data_type="B"), # int
             'length': AccessData(msg=driver_packet.header.length, start_index=0).get_data(data_type="H"), # short
-            'type': AccessData(msg=driver_packet.header.type, start_index=0).get_data(data_type="B"), # int
+            'type': driver_packet.header.type #AccessData(msg=driver_packet.header.type, start_index=0).get_data(data_type="B"), # int
         }
 
     def __decode_pid_set_response(self, driver_packet):
         self.pid_set_response = {
-            "flag": AccessData(msg=driver_packet.header.flag, start_index=0).get_data(data_type="B"), # int
+            "flag": driver_packet.header.flag, #AccessData(msg=driver_packet.header.flag, start_index=0).get_data(data_type="B"), # int
             "length": AccessData(msg=driver_packet.header.length, start_index=0).get_data(data_type="H"), # short
-            "type": AccessData(msg=driver_packet.header.type, start_index=0).get_data(data_type="B"), # int
-            "controller_number": AccessData(msg=driver_packet.controller_number, start_index=0).get_data(data_type="B"), # int
+            "type": driver_packet.header.length, #AccessData(msg=driver_packet.header.type, start_index=0).get_data(data_type="B"), # int
+            "controller_number": driver_packet.controller_number, #AccessData(msg=driver_packet.controller_number, start_index=0).get_data(data_type="B"), # int
             "controller": [  # list of 6 dicts each with three floats (P, I, D)
                     {
                         "P": driver_packet.controller.axes[i].P, 
@@ -71,17 +76,18 @@ class GroundReceiveWorker():
                         "D": driver_packet.controller.axes[i].D 
                     } for i in range(0,6)
                 ],
-            "crc": AccessData(msg=driver_packet.crc, start_index=0).get_data(data_type="f"), # float
+            #"crc": AccessData(msg=driver_packet.crc, start_index=0).get_data(data_type="f"), # float
         }
 
 
 class GroundReceive(QThread):
     new_data = pyqtSignal(dict)
-    receiver = GroundReceiveWorker()
+    receiver = GroundReceiveWorker(None, None, "COM5")
     def run(self, receiver=receiver):
         self.threadActive = True
         # Mocks actual data coming from RFD
         while self.threadActive:
             receiver.receive()
             self.payload = receiver.payload
-            self.new_data.emit(self.payload)
+            if self.payload is not None:
+                self.new_data.emit(self.payload)

@@ -199,11 +199,9 @@ class MotorsPage(QWidget):
         self.m3_output_label.setText(f"Motor Output: 0")
         self.m4_output_label.setText(f"Motor Output: 0")
 
-        self.lx_rot_pbar.setValue(0)
-        self.ly_rot_pbar.setValue(0)
-        self.lz_axis_pbar.setValue(0)
-
-        
+        self.lx_rot_pbar.setValue(data.get('roll_rate'))
+        self.ly_rot_pbar.setValue(data.get('yaw_rate'))
+        self.lz_axis_pbar.setValue(data.get('pitch_rate'))
 
         self.M1_CURRENT_DRAW = 0
         self.M2_CURRENT_DRAW = 0

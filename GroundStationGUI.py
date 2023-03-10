@@ -9,7 +9,7 @@ from MotorsPage import MotorsPage
 from SetupPage import SetupPage
 from LoggingPage import LoggingPage
 from cameraThread import VideoFeedWorker
-# from ground_receive import GroundReceive
+from ground_receive import GroundReceive
 import folium
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
@@ -22,6 +22,7 @@ class GroundStationGUI(QWidget):
     new_home_info = pyqtSignal(dict)
     new_motor_info = pyqtSignal(dict)
     new_setup_info = pyqtSignal(dict)
+    
     
     def __init__(self):
         super(GroundStationGUI, self).__init__()
