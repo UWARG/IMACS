@@ -1,3 +1,5 @@
+import time
+
 import random
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
@@ -28,9 +30,9 @@ class MockGroundReceiveWorker():
         self.payload = {
             'motor_outputs': [motor_outputs_retriever.get_data(data_type="B") for i in range(0, 12)], # list of 12 ints
             'gps_data': {
-                'lat' : driver_packet.data.latitude, # double
+                'lat' : 5,#driver_packet.data.latitude, # double
                 'lon' : driver_packet.data.longitude, # double
-                'alt' : driver_packet.data.altitude, # float
+                'alt' : 6, #driver_packet.data.altitude, # float
             },  
             'climb_rate': driver_packet.data.climb_rate, # float
             'heading': driver_packet.data.heading, # float
@@ -86,11 +88,11 @@ class MockGroundReceiveWorker():
 
     # def mock_receive(self):
     def receive(self):
-        while True:
-            if random.randint(0, 1000000) == 1:
-                mock_packet = self.__gen_mock_packet()
-                print("generating new mock packet")
-                self.__decode(mock_packet)
+        # while True:
+        # if random.randint(0, 10000000) == 1:
+            mock_packet = self.__gen_mock_packet()
+            print("generating new mock packet")
+            self.__decode(mock_packet)
             # if self.pid_set_response != None:
             #     print(self.pid_set_response)
             # if self.payload != None:
@@ -101,11 +103,14 @@ class GroundReceive(QThread):
     new_data = pyqtSignal(dict)
     receiver = MockGroundReceiveWorker()
     def run(self, receiver=receiver):
+        print("running")
         self.threadActive = True
         # Mocks actual data coming from RFD
         while self.threadActive:
+            time.sleep(0.1)
             receiver.receive()
             self.payload = receiver.payload
-            self.new_data.emit(self.payload)
+            if(self.payload != None):
+                self.new_data.emit(self.payload)
         
 
