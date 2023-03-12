@@ -2,6 +2,7 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from HeadingWidget import HeadingWidget
+from GroundReceive import DroneInfo, BatteryVoltages
 import cv2
 import io
 import folium  # pip install folium
@@ -15,6 +16,7 @@ class HomePage(QWidget):
     new_heading_data = pyqtSignal(dict)
     def __init__(self, map_layout, video_layout):
         super(HomePage, self).__init__()
+        
         self.videoLayout = video_layout
         self.mapLayout = map_layout
         self.headingIndicator = HeadingWidget(self.videoLayout)
@@ -54,11 +56,19 @@ class HomePage(QWidget):
     def getLayout(self):
         return self.headingIndicator
 
-    def newData(self, data):
+    def newDroneInfo(self, data):
         self.altitude_label.setText(f"Altitude: {round(data.get('gps_data').get('alt'), 3)}")
         self.ground_speed_label.setText("Ground Speed: 0")
-        self.battery_label.setText("Battery(V): 0")
         #self.flight_label.setText(f"Flight Time: {round(data.get(''))}")
         self.airspeed_label.setText("Airspeed: 0")
+        
+    def newCoordinateInfo(self, data):
         self.new_heading_data.emit(data)
+
+    def newBatteryInfo(self, data):
+        self.battery_label.setText("Battery(V): 0")
+
+    def newRotationInfo(self, data):
+        self.new_heading_data.emit(data)
+
     

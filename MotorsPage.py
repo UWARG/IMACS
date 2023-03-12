@@ -188,7 +188,7 @@ class MotorsPage(QWidget):
 
         self.setLayout(body_layout)
 
-    def newData(self, data):
+    def newThrottleInfo(self, data):
         self.m1ProgressBar.setValue(data.get('motor_outputs')[0])
         self.m2ProgressBar.setValue(data.get('motor_outputs')[1])
         self.m3ProgressBar.setValue(data.get('motor_outputs')[2])
@@ -207,3 +207,9 @@ class MotorsPage(QWidget):
         self.M2_CURRENT_DRAW = data.get('motor_outputs')[9]
         self.M3_CURRENT_DRAW = data.get('motor_outputs')[10]
         self.M4_CURRENT_DRAW = data.get('motor_outputs')[11]
+
+    def newIMUInfo(self, data):
+        #just copy and paste whichever lines above correspond to IMU to here
+
+    def newMotorInfo(self, data):
+        #ditto  

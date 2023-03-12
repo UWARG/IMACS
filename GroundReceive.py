@@ -196,6 +196,13 @@ class FullPayload:
     def getData(self):
         return self.groundReceiverWorker.getFullPayload()
     
+class MotorInfo: 
+    def __init__(self, groundReceiverWorker):
+        self.groundReceiverWorker = groundReceiverWorker
+
+    def getData(self):
+        return self.groundReceiverWorker.getMotorOutputs()
+    
 
 def test_data_getter_classes():
     """
@@ -209,6 +216,7 @@ def test_data_getter_classes():
     throttleInfoGetter = ThrottleInfo(receiver)
     coordinatesGetter = Coordinates(receiver)
     droneInfoGetter = DroneInfo(receiver)
+    motorInfoGetter = MotorInfo(receiver)
 
     while True:
         print(imuDataGetter.getData())
@@ -218,6 +226,7 @@ def test_data_getter_classes():
         print(throttleInfoGetter.getData())
         print(coordinatesGetter.getData())
         print(droneInfoGetter.getData())
+        print(motorInfoGetter.getData())
 
         time.sleep(0.1)
 
