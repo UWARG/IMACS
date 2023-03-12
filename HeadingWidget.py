@@ -66,9 +66,12 @@ class HeadingWidget(QVBoxLayout):
         
         self.addWidget(self.view)
     
-    def newData(self, data):
-        self.circlegraphic_pixmap.setRotation(0)
+    def newCoordinateInfo(self, data):
         self.compassgraphic_pixmap.setRotation(0)
+
+    def newRotationInfo(self, data):
+        self.circlegraphic_pixmap.setRotation(0)
+        
         
 
 

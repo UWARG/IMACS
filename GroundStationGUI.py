@@ -8,7 +8,7 @@ from MotorsPage import MotorsPage
 from SetupPage import SetupPage
 from LoggingPage import LoggingPage
 from cameraThread import VideoFeedWorker
-from ground_receive import GroundReceive
+from GroundReceive import ThrottleInfo, BatteryVoltages, RotationInfo, IMUData, DroneInfo, Coordinates, MotorInfo
 # from MockGroundReceive import GroundReceive
 import folium
 from PyQt5.QtCore import *
@@ -19,9 +19,13 @@ from PyQt5.QtWebEngineWidgets import QWebEngineView
 
 class GroundStationGUI(QWidget):
     image_resize = pyqtSignal(float, float)
-    new_home_info = pyqtSignal(dict)
-    new_motor_info = pyqtSignal(dict)
-    new_setup_info = pyqtSignal(dict)
+    drone_signal = pyqtSignal(dict)
+    throttle_signal = pyqtSignal(dict)
+    coordinate_signal = pyqtSignal(dict)
+    battery_signal = pyqtSignal(dict)
+    rotation_signal = pyqtSignal(dict)
+    imu_signal = pyqtSignal(dict)
+    motor_signal = pyqtSignal(dict)
     
     def __init__(self):
         super(GroundStationGUI, self).__init__()
@@ -44,9 +48,23 @@ class GroundStationGUI(QWidget):
         self.videoFeedLabel = QGraphicsPixmapItem() 
         self.videoFeedWorker.ImageUpdate.connect(self.imageUpdateSlot)
 
-        self.dataStream = GroundReceive()
-        self.dataStream.start()
-        self.dataStream.new_data.connect(self.getNewData)
+        self.drone_info = DroneInfo()
+        self.throttle_info = ThrottleInfo()
+        self.coordinate_info = Coordinates()
+        self.battery_voltages_info = BatteryVoltages()
+        self.rotation_info = RotationInfo()
+        self.imu_info = IMUData()
+        self.motor_info = MotorInfo()
+        
+        self.drone_info.start()
+        self.throttle_info.start()
+        self.coordinate_info.start()
+        self.battery_voltages_info.start()
+        self.rotation_info.start()
+        self.imu_info.start() 
+        self.motor_info.start()
+        
+        
 
         # Create the map view for the homepage
         self.map_layout = QVBoxLayout()
@@ -107,16 +125,20 @@ class GroundStationGUI(QWidget):
         self.stackSetupPage = SetupPage()
         self.stackLoggingPage = LoggingPage()
 
+        self.drone_info.connect(self.stackHomePage.newDroneInfo)
+        self.throttle_info.connect(self.stackMotorsPage.newThrottleInfo)
+        self.coordinate_info.connect(self.stackHomePage.newCoordinateInfo)
+        self.battery_voltages_info.connect(self.stackHomePage.newBatteryInfo)
+        self.rotation_info.connect(self.stackHomePage.newRotationInfo)
+        self.imu_info.connect(self.stackMotorsPage.newIMUInfo)
+        self.motor_info.connect(self.stackMotorsPage.newMotorInfo)
+
         # Add stack to StackedWidget
         stack = QStackedWidget(self)
         stack.addWidget(self.stackHomePage)
         stack.addWidget(self.stackMotorsPage)
         stack.addWidget(self.stackSetupPage)
         stack.addWidget(self.stackLoggingPage)
-
-        self.new_home_info.connect(self.stackHomePage.newData)
-        self.new_motor_info.connect(self.stackMotorsPage.newData)
-        self.new_setup_info.connect(self.stackMotorsPage.newData)
 
         # Set push button clicked methods to switch the page
         self.homeButton.clicked.connect(lambda: stack.setCurrentIndex(HOME_PAGE))
@@ -133,17 +155,35 @@ class GroundStationGUI(QWidget):
 
         # Display the window
         self.showMaximized()
-
+    
     def imageUpdateSlot(self, Image):
       self.videoFeedLabel.setPixmap(QPixmap.fromImage(Image))
 
     def resizeEvent(self, event):
       self.image_resize.emit(self.stackHomePage.getLayout().geometry().width(), self.stackHomePage.getLayout().geometry().height())
 
-    def getNewData(self, payload):
-      self.new_home_info.emit(payload)
-      self.new_motor_info.emit(payload)
-      self.new_setup_info.emit(payload)
+      #call these functions at whatever rate  
+    
+    def emitDrone(self, data):
+       self.drone_signal.emit(data)
+       
+    def emitCoordinates(self, data):
+       self.coordinate_signal.emit(data)
+      
+    def emitIMU(self, data):
+       self.imu_signal.emit(data)
+
+    def emitThrottle(self, data):
+       self.throttle_signal.emit(data)
+
+    def emitBattery(self, data):
+       self.battery_signal.emit(data)
+
+    def emitRotation(self, data):
+       self.rotation_signal.emit(data)
+
+    def emitMotor(self, data): 
+       self.motor_signal.emit(data) 
 
 # Run the application
 def main():
