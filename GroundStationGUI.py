@@ -8,7 +8,7 @@ from MotorsPage import MotorsPage
 from SetupPage import SetupPage
 from LoggingPage import LoggingPage
 from cameraThread import VideoFeedWorker
-from GroundReceive import ThrottleInfo, BatteryVoltages, RotationInfo, IMUData, DroneInfo, Coordinates, MotorInfo
+from MockGroundReceive import GroundRecieveWorker, ThrottleInfo, BatteryVoltages, RotationInfo, IMUData, DroneInfo, Coordinates, MotorInfo
 # from MockGroundReceive import GroundReceive
 import folium
 from PyQt5.QtCore import *
@@ -48,13 +48,15 @@ class GroundStationGUI(QWidget):
         self.videoFeedLabel = QGraphicsPixmapItem() 
         self.videoFeedWorker.ImageUpdate.connect(self.imageUpdateSlot)
 
-        self.drone_info = DroneInfo()
-        self.throttle_info = ThrottleInfo()
-        self.coordinate_info = Coordinates()
-        self.battery_voltages_info = BatteryVoltages()
-        self.rotation_info = RotationInfo()
-        self.imu_info = IMUData()
-        self.motor_info = MotorInfo()
+        ground_worker = GroundRecieveWorker()
+        
+        self.drone_info = DroneInfo(ground_worker)
+        self.throttle_info = ThrottleInfo(ground_worker)
+        self.coordinate_info = Coordinates(ground_worker)
+        self.battery_voltages_info = BatteryVoltages(ground_worker)
+        self.rotation_info = RotationInfo(ground_worker)
+        self.imu_info = IMUData(ground_worker)
+        self.motor_info = MotorInfo(ground_worker)
         
         self.drone_info.start()
         self.throttle_info.start()
