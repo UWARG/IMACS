@@ -11,14 +11,14 @@ import time
 # Replace below with the name of the port the receiver RFD is connected to
 PORT = "COM5"
 
-receiver = GroundReceive(None, None, PORT, 115200)
+receiver = GroundReceive() # something is wrong here
+receiver.run()
 
 while True:
-    time.sleep(0.1)
+    time.sleep(1000)
     
-    receiver.receive()
-    print("PAYLOAD", receiver.payload)
-    print("pid_set_response", receiver.pid_set_response)
+    # print("PAYLOAD", receiver.payload)
+    # print("pid_set_response", receiver.pid_set_response)
 
 # from ground_receive import GroundReceive
 

@@ -199,9 +199,9 @@ class MotorsPage(QWidget):
         self.m3_output_label.setText(f"Motor Output: {data.get('motor_outputs')[6]}")
         self.m4_output_label.setText(f"Motor Output: {data.get('motor_outputs')[7]}")
 
-        self.lx_rot_pbar.setValue(data.get('roll_rate'))
-        self.ly_rot_pbar.setValue(data.get('yaw_rate'))
-        self.lz_axis_pbar.setValue(data.get('pitch_rate'))
+        self.lx_rot_pbar.setValue(int(data.get('roll_rate')))
+        self.ly_rot_pbar.setValue(int(data.get('yaw_rate')))
+        self.lz_axis_pbar.setValue(int(data.get('pitch_rate')))
 
         self.M1_CURRENT_DRAW = data.get('motor_outputs')[8]
         self.M2_CURRENT_DRAW = data.get('motor_outputs')[9]
