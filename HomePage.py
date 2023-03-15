@@ -2,7 +2,7 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from HeadingWidget import HeadingWidget
-from GroundReceive import DroneInfo, BatteryVoltages
+from MockGroundReceive import DroneInfo, BatteryVoltages
 import cv2
 import io
 import folium  # pip install folium
