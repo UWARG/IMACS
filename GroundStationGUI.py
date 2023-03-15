@@ -4,11 +4,11 @@
 import sys
 import io
 from HomePage import HomePage
-from MotorsPage import MotorsPage
+# from MotorsPage import MotorsPage
 from SetupPage import SetupPage
 from LoggingPage import LoggingPage
 from cameraThread import VideoFeedWorker
-from MockGroundReceive import GroundRecieveWorker, ThrottleInfo, BatteryVoltages, RotationInfo, IMUData, DroneInfo, Coordinates, MotorInfo
+from MockGroundReceive import MockGroundReceiveWorker, ThrottleInfo, BatteryVoltages, RotationInfo, IMUData, DroneInfo, Coordinates
 # from MockGroundReceive import GroundReceive
 import folium
 from PyQt5.QtCore import *
@@ -48,7 +48,7 @@ class GroundStationGUI(QWidget):
         self.videoFeedLabel = QGraphicsPixmapItem() 
         self.videoFeedWorker.ImageUpdate.connect(self.imageUpdateSlot)
 
-        ground_worker = GroundRecieveWorker()
+        ground_worker = MockGroundReceiveWorker()
         
         self.drone_info = DroneInfo(ground_worker)
         self.throttle_info = ThrottleInfo(ground_worker)
@@ -56,15 +56,17 @@ class GroundStationGUI(QWidget):
         self.battery_voltages_info = BatteryVoltages(ground_worker)
         self.rotation_info = RotationInfo(ground_worker)
         self.imu_info = IMUData(ground_worker)
-        self.motor_info = MotorInfo(ground_worker)
+        # self.motor_info = MotorInfo(ground_worker)
         
-        self.drone_info.start()
-        self.throttle_info.start()
-        self.coordinate_info.start()
-        self.battery_voltages_info.start()
-        self.rotation_info.start()
-        self.imu_info.start() 
-        self.motor_info.start()
+
+        ground_worker.start()
+        # self.drone_info.start()
+        # self.throttle_info.start()
+        # self.coordinate_info.start()
+        # self.battery_voltages_info.start()
+        # self.rotation_info.start()
+        # self.imu_info.start() 
+        # self.motor_info.start()
         
         
 
@@ -123,7 +125,7 @@ class GroundStationGUI(QWidget):
 
         # Create the stacks for the different pages
         self.stackHomePage = HomePage(self.map_layout, self.videoFeedLabel)
-        self.stackMotorsPage = MotorsPage()
+        # self.stackMotorsPage = MotorsPage()
         self.stackSetupPage = SetupPage()
         self.stackLoggingPage = LoggingPage()
 
