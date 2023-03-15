@@ -136,6 +136,12 @@ class GroundReceiveWorker():
         else:
             return self.payload
         
+    def getThrottleInfo(self):
+        if self.payload is None:
+            return None
+        else:
+            return self.payload["throttle"]
+        
     def start(self):
         self.is_running = True
         # start a new thread for the receive function
@@ -146,63 +152,97 @@ class GroundReceiveWorker():
         self.is_running = False
         # wait for the receive thread to finish
         self.receive_thread.join()
-class DroneInfo:
+
+class DroneInfo(QThread):
     def __init__(self, groundReceiverWorker):
         self.groundReceiverWorker = groundReceiverWorker
 
-    def getData(self):
-        return self.groundReceiverWorker.getDroneInfo()
+    def run(self):
+        self.threadActive = True
+        while self.threadActive:
+            self.payload = self.groundReceiverWorker.getDroneInfo()
+            if self.payload is not None:
+                self.new_data.emit(self.payload)
     
-class Coordinates:
+class Coordinates(QThread):
     def __init__(self, groundReceiverWorker):
         self.groundReceiverWorker = groundReceiverWorker
 
-    def getData(self):
-        return self.groundReceiverWorker.getCoordinates()
+    def run(self):
+        self.threadActive = True
+        while self.threadActive:
+            self.payload = self.groundReceiverWorker.getCoordinateInfo()
+            if self.payload is not None:
+                self.new_data.emit(self.payload)
 
 
-class ThrottleInfo:
+class ThrottleInfo(QThread):
     def __init__(self, groundReceiverWorker):
         self.groundReceiverWorker = groundReceiverWorker
 
-    def getData(self):
-        return self.groundReceiverWorker.getMotorOutputs()
+    def run(self):
+        self.threadActive = True
+        while self.threadActive:
+            self.payload = self.groundReceiverWorker.getThrottleInfo()
+            if self.payload is not None:
+                self.new_data.emit(self.payload)
 
-class BatteryVoltages:
+class BatteryVoltages(QThread):
     def __init__(self, groundReceiverWorker):
         self.groundReceiverWorker = groundReceiverWorker
 
-    def getData(self):
-        return self.groundReceiverWorker.getBatteryInfo()
+    def run(self):
+        self.threadActive = True
+        while self.threadActive:
+            self.payload = self.groundReceiverWorker.getBatteryInfo()
+            if self.payload is not None:
+                self.new_data.emit(self.payload)
 
-class RotationInfo:
+class RotationInfo(QThread):
     def __init__(self, groundReceiverWorker):
         self.groundReceiverWorker = groundReceiverWorker
 
-    def getData(self):
-        return self.groundReceiverWorker.getRotationInfo()
+    def run(self):
+        self.threadActive = True
+        while self.threadActive:
+            self.payload = self.groundReceiverWorker.getRotationInfo()
+            if self.payload is not None:
+                self.new_data.emit(self.payload)
 
-class IMUData:
+class IMUData(QThread):
     def __init__(self, groundReceiverWorker):
         self.groundReceiverWorker = groundReceiverWorker
 
-    def getData(self):
-        return self.groundReceiverWorker.getIMUData()
+    def run(self):
+        self.threadActive = True
+        while self.threadActive:
+            self.payload = self.groundReceiverWorker.getIMUData()
+            if self.payload is not None:
+                self.new_data.emit(self.payload)
 
-class FullPayload:
+class FullPayload(QThread):
     def __init__(self, groundReceiverWorker):
         self.groundReceiverWorker = groundReceiverWorker
 
-    def getData(self):
-        return self.groundReceiverWorker.getFullPayload()
+    def run(self):
+        self.threadActive = True
+        while self.threadActive:
+            self.payload = self.groundReceiverWorker.getFullPayload()
+            if self.payload is not None:
+                self.new_data.emit(self.payload)
     
-class MotorInfo: 
+class MotorInfo(QThread): 
     def __init__(self, groundReceiverWorker):
         self.groundReceiverWorker = groundReceiverWorker
 
-    def getData(self):
-        return self.groundReceiverWorker.getMotorOutputs()
-    
+    def run(self):
+        self.threadActive = True
+        while self.threadActive:
+            self.payload = self.groundReceiverWorker.getMotorOutputs()
+            if self.payload is not None:
+                self.new_data.emit(self.payload)
+
+
 
 def test_data_getter_classes():
     """
