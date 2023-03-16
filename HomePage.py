@@ -59,7 +59,7 @@ class HomePage(QWidget):
         return self.headingIndicator
 
     def newDroneInfo(self, data):
-        self.altitude_label.setText(f"Altitude: {round(data.get('gps_data').get('alt'), 3)}")
+        self.altitude_label.setText(f"Altitude: {round(data['altitude'])}")
         self.ground_speed_label.setText("Ground Speed: 0")
         #self.flight_label.setText(f"Flight Time: {round(data.get(''))}")
         self.airspeed_label.setText("Airspeed: 0")

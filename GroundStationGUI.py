@@ -21,7 +21,7 @@ class GroundStationGUI(QWidget):
     drone_signal = pyqtSignal(dict)
     throttle_signal = pyqtSignal(dict)
     coordinate_signal = pyqtSignal(dict)
-    battery_signal = pyqtSignal(dict)
+   #  battery_signal = pyqtSignal(dict)
     rotation_signal = pyqtSignal(dict)
     imu_signal = pyqtSignal(dict)
     motor_signal = pyqtSignal(dict)
@@ -127,15 +127,15 @@ class GroundStationGUI(QWidget):
         self.drone_info.new_data.connect(self.emitDrone)
         #self.throttle_info.new_data.connect(self.emitThrottle)
         self.coordinate_info.new_data.connect(self.emitCoordinates)
-        self.battery_voltages_info.new_data.connect(self.emitBattery)
+      #   self.battery_voltages_info.new_data.connect(self.emitBattery)
         self.rotation_info.new_data.connect(self.emitRotation)
         self.imu_info.new_data.connect(self.emitIMU)
-        self.motor_info.new_data.connect(self.emitMotor)
+      #   self.motor_info.new_data.connect(self.emitMotor)
 
         self.drone_signal.connect(self.stackHomePage.newDroneInfo)
         #self.throttle_signal.connect(self.stackMotorsPage.newThrottleInfo)
         self.coordinate_signal.connect(self.stackHomePage.newCoordinateInfo)
-        self.battery_signal.connect(self.stackHomePage.newBatteryInfo)
+      #   self.battery_signal.connect(self.stackHomePage.newBatteryInfo)
         self.rotation_signal.connect(self.stackHomePage.newRotationInfo)
       #   self.imu_signal.connect(self.stackMotorsPage.newIMUInfo)
       #   self.motor_signal.connect(self.stackMotorsPage.newMotorInfo)
@@ -183,14 +183,14 @@ class GroundStationGUI(QWidget):
     def emitThrottle(self, data):
        self.throttle_signal.emit(data)
 
-    def emitBattery(self, data):
-       self.battery_signal.emit(data)
+   #  def emitBattery(self, data):
+   #     self.battery_signal.emit(data)
 
     def emitRotation(self, data):
        self.rotation_signal.emit(data)
 
-    def emitMotor(self, data): 
-       self.motor_signal.emit(data) 
+   #  def emitMotor(self, data): 
+   #     self.motor_signal.emit(data) 
 
 # Run the application
 def main():
