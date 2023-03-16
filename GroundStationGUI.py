@@ -4,12 +4,11 @@
 import sys
 import io
 from HomePage import HomePage
-# from MotorsPage import MotorsPage
+from MotorsPage import MotorsPage
 from SetupPage import SetupPage
 from LoggingPage import LoggingPage
 from cameraThread import VideoFeedWorker
-from MockGroundReceive import MockGroundReceiveWorker, ThrottleInfo, BatteryVoltages, RotationInfo, IMUData, DroneInfo, Coordinates
-# from MockGroundReceive import GroundReceive
+from MockGroundReceive import MockGroundReceiveWorker, ThrottleInfo, BatteryVoltages, RotationInfo, IMUData, DroneInfo, Coordinates, MotorInfo
 import folium
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
@@ -51,24 +50,20 @@ class GroundStationGUI(QWidget):
         ground_worker = MockGroundReceiveWorker()
         
         self.drone_info = DroneInfo(ground_worker)
-        self.throttle_info = ThrottleInfo(ground_worker)
+        #self.throttle_info = ThrottleInfo(ground_worker)
         self.coordinate_info = Coordinates(ground_worker)
         self.battery_voltages_info = BatteryVoltages(ground_worker)
         self.rotation_info = RotationInfo(ground_worker)
         self.imu_info = IMUData(ground_worker)
-        # self.motor_info = MotorInfo(ground_worker)
-        
+        self.motor_info = MotorInfo(ground_worker) 
 
-        ground_worker.start()
-        # self.drone_info.start()
-        # self.throttle_info.start()
-        # self.coordinate_info.start()
-        # self.battery_voltages_info.start()
-        # self.rotation_info.start()
-        # self.imu_info.start() 
-        # self.motor_info.start()
-        
-        
+        self.drone_info.start()
+        #self.throttle_info.start()
+        self.coordinate_info.start()
+        self.battery_voltages_info.start()
+        self.rotation_info.start()
+        self.imu_info.start() 
+        self.motor_info.start()
 
         # Create the map view for the homepage
         self.map_layout = QVBoxLayout()
@@ -125,17 +120,25 @@ class GroundStationGUI(QWidget):
 
         # Create the stacks for the different pages
         self.stackHomePage = HomePage(self.map_layout, self.videoFeedLabel)
-        # self.stackMotorsPage = MotorsPage()
+        self.stackMotorsPage = MotorsPage()
         self.stackSetupPage = SetupPage()
         self.stackLoggingPage = LoggingPage()
 
-        self.drone_info.connect(self.stackHomePage.newDroneInfo)
-        self.throttle_info.connect(self.stackMotorsPage.newThrottleInfo)
-        self.coordinate_info.connect(self.stackHomePage.newCoordinateInfo)
-        self.battery_voltages_info.connect(self.stackHomePage.newBatteryInfo)
-        self.rotation_info.connect(self.stackHomePage.newRotationInfo)
-        self.imu_info.connect(self.stackMotorsPage.newIMUInfo)
-        self.motor_info.connect(self.stackMotorsPage.newMotorInfo)
+        self.drone_info.new_data.connect(self.emitDrone)
+        #self.throttle_info.new_data.connect(self.emitThrottle)
+        self.coordinate_info.new_data.connect(self.emitCoordinates)
+        self.battery_voltages_info.new_data.connect(self.emitBattery)
+        self.rotation_info.new_data.connect(self.emitRotation)
+        self.imu_info.new_data.connect(self.emitIMU)
+        self.motor_info.new_data.connect(self.emitMotor)
+
+        self.drone_signal.connect(self.stackHomePage.newDroneInfo)
+        #self.throttle_signal.connect(self.stackMotorsPage.newThrottleInfo)
+        self.coordinate_signal.connect(self.stackHomePage.newCoordinateInfo)
+        self.battery_signal.connect(self.stackHomePage.newBatteryInfo)
+        self.rotation_signal.connect(self.stackHomePage.newRotationInfo)
+      #   self.imu_signal.connect(self.stackMotorsPage.newIMUInfo)
+      #   self.motor_signal.connect(self.stackMotorsPage.newMotorInfo)
 
         # Add stack to StackedWidget
         stack = QStackedWidget(self)

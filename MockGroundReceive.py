@@ -123,13 +123,6 @@ class MockGroundReceiveWorker():
         else:
             return self.payload["battery_voltages"]
         
-
-    def getMotorOutputs(self):
-        if self.payload is None:
-            return None
-        else:
-            return self.payload["motor_outputs"]
-        
     def getRotationInfo(self):
         if self.payload is None:
             return None
@@ -157,7 +150,6 @@ class MockGroundReceiveWorker():
             return None
         else:
             return self.payload
-        
 
     def receive(self):
         while self.is_running:
@@ -176,55 +168,115 @@ class MockGroundReceiveWorker():
         # wait for the receive thread to finish
         self.receive_thread.join()
 
-class DroneInfo:
+class DroneInfo(QThread):
+    new_data = pyqtSignal(dict)
     def __init__(self, groundReceiverWorker):
+        super().__init__()
         self.groundReceiverWorker = groundReceiverWorker
 
-    def getData(self):
-        return self.groundReceiverWorker.getDroneInfo()
+    def run(self):
+        self.threadActive = True
+        while self.threadActive:
+            self.payload = self.groundReceiverWorker.getDroneInfo()
+            if self.payload is not None:
+                self.new_data.emit(self.payload)
     
-class Coordinates:
+class Coordinates(QThread):
+    new_data = pyqtSignal(dict)
+    def __init__(self, groundReceiverWorker):
+        super().__init__()
+        self.groundReceiverWorker = groundReceiverWorker
+        groundReceiverWorker.start()
+
+    def run(self):
+        self.threadActive = True
+        while self.threadActive:
+            self.payload = self.groundReceiverWorker.getCoordinates()
+            if self.payload is not None:
+                self.new_data.emit(self.payload)
+
+
+class ThrottleInfo(QThread):
+    new_data = pyqtSignal(dict)
+    def __init__(self, groundReceiverWorker):
+        super().__init__()
+        self.groundReceiverWorker = groundReceiverWorker
+        groundReceiverWorker.start()
+
+    def run(self):
+        self.threadActive = True
+        while self.threadActive:
+            self.payload = self.groundReceiverWorker.getThrottleInfo()
+            if self.payload is not None:
+                self.new_data.emit(self.payload)
+
+class BatteryVoltages(QThread):
+    new_data = pyqtSignal(list)
+    def __init__(self, groundReceiverWorker):
+        super().__init__()
+        self.groundReceiverWorker = groundReceiverWorker
+        groundReceiverWorker.start()
+
+    def run(self):
+        self.threadActive = True
+        while self.threadActive:
+            self.payload = self.groundReceiverWorker.getBatteryInfo()
+            if self.payload is not None:
+                self.new_data.emit(self.payload)
+
+class RotationInfo(QThread):
+    new_data = pyqtSignal(dict)
+    def __init__(self, groundReceiverWorker):
+        super().__init__()
+        self.groundReceiverWorker = groundReceiverWorker
+        groundReceiverWorker.start()
+
+    def run(self):
+        self.threadActive = True
+        while self.threadActive:
+            self.payload = self.groundReceiverWorker.getRotationInfo()
+            if self.payload is not None:
+                self.new_data.emit(self.payload)
+
+class IMUData(QThread):
+    new_data = pyqtSignal(dict)
+    def __init__(self, groundReceiverWorker):
+        super().__init__()
+        self.groundReceiverWorker = groundReceiverWorker
+        groundReceiverWorker.start()
+
+    def run(self):
+        self.threadActive = True
+        while self.threadActive:
+            self.payload = self.groundReceiverWorker.getIMUData()
+            if self.payload is not None:
+                self.new_data.emit(self.payload)
+
+class FullPayload(QThread):
+    new_data = pyqtSignal(dict)
     def __init__(self, groundReceiverWorker):
         self.groundReceiverWorker = groundReceiverWorker
 
-    def getData(self):
-        return self.groundReceiverWorker.getCoordinates()
-
-
-class ThrottleInfo:
+    def run(self):
+        self.threadActive = True
+        while self.threadActive:
+            self.payload = self.groundReceiverWorker.getFullPayload()
+            if self.payload is not None:
+                self.new_data.emit(self.payload)
+    
+class MotorInfo(QThread): 
+    new_data = pyqtSignal(list)
     def __init__(self, groundReceiverWorker):
+        super().__init__()
         self.groundReceiverWorker = groundReceiverWorker
+        groundReceiverWorker.start()
 
-    def getData(self):
-        return self.groundReceiverWorker.getMotorOutputs()
-
-class BatteryVoltages:
-    def __init__(self, groundReceiverWorker):
-        self.groundReceiverWorker = groundReceiverWorker
-
-    def getData(self):
-        return self.groundReceiverWorker.getBatteryInfo()
-
-class RotationInfo:
-    def __init__(self, groundReceiverWorker):
-        self.groundReceiverWorker = groundReceiverWorker
-
-    def getData(self):
-        return self.groundReceiverWorker.getRotationInfo()
-
-class IMUData:
-    def __init__(self, groundReceiverWorker):
-        self.groundReceiverWorker = groundReceiverWorker
-
-    def getData(self):
-        return self.groundReceiverWorker.getIMUData()
-
-class FullPayload:
-    def __init__(self, groundReceiverWorker):
-        self.groundReceiverWorker = groundReceiverWorker
-
-    def getData(self):
-        return self.groundReceiverWorker.getFullPayload()
+    def run(self):
+        self.threadActive = True
+        while self.threadActive:
+            self.payload = self.groundReceiverWorker.getMotorInfo()
+            if self.payload is not None:
+                self.new_data.emit(self.payload)
 
 def test_data_getter_classes():
     """

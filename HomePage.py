@@ -13,14 +13,16 @@ Folium in PyQt5
 
 
 class HomePage(QWidget):
-    new_heading_data = pyqtSignal(dict)
+    new_rotation_data = pyqtSignal(dict)
+    new_coordinate_data = pyqtSignal(dict)
     def __init__(self, map_layout, video_layout):
         super(HomePage, self).__init__()
         
         self.videoLayout = video_layout
         self.mapLayout = map_layout
         self.headingIndicator = HeadingWidget(self.videoLayout)
-        self.new_heading_data.connect(self.headingIndicator.newData)
+        self.new_coordinate_data.connect(self.headingIndicator.newCoordinateInfo)
+        self.new_rotation_data.connect(self.headingIndicator.newRotationInfo)
         # Create the Home page UI here
         body_layout = QHBoxLayout()
         self.left_layout = QVBoxLayout()
@@ -63,12 +65,12 @@ class HomePage(QWidget):
         self.airspeed_label.setText("Airspeed: 0")
         
     def newCoordinateInfo(self, data):
-        self.new_heading_data.emit(data)
+        self.new_coordinate_data.emit(data)
 
     def newBatteryInfo(self, data):
         self.battery_label.setText("Battery(V): 0")
 
     def newRotationInfo(self, data):
-        self.new_heading_data.emit(data)
+        self.new_rotation_data.emit(data)
 
     
