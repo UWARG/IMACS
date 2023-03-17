@@ -208,8 +208,8 @@ class MotorsPage(QWidget):
         self.M3_CURRENT_DRAW = data.get('motor_outputs')[10]
         self.M4_CURRENT_DRAW = data.get('motor_outputs')[11]
 
-    def newIMUInfo(self, data):
-        #just copy and paste whichever lines above correspond to IMU to here
+    # def newIMUInfo(self, data):
+    #     #just copy and paste whichever lines above correspond to IMU to here
 
-    def newMotorInfo(self, data):
-        #ditto  
+    # def newMotorInfo(self, data):
+    #     #ditto  

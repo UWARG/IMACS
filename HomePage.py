@@ -13,14 +13,16 @@ Folium in PyQt5
 
 
 class HomePage(QWidget):
-    new_heading_data = pyqtSignal(dict)
+    new_rotation_data = pyqtSignal(dict)
+    new_coordinate_data = pyqtSignal(dict)
     def __init__(self, map_layout, video_layout):
         super(HomePage, self).__init__()
         
         self.videoLayout = video_layout
         self.mapLayout = map_layout
         self.headingIndicator = HeadingWidget(self.videoLayout)
-        self.new_heading_data.connect(self.headingIndicator.newData)
+        self.new_coordinate_data.connect(self.headingIndicator.newCoordinateInfo)
+        self.new_rotation_data.connect(self.headingIndicator.newRotationInfo)
         # Create the Home page UI here
         body_layout = QHBoxLayout()
         self.left_layout = QVBoxLayout()
@@ -57,18 +59,18 @@ class HomePage(QWidget):
         return self.headingIndicator
 
     def newDroneInfo(self, data):
-        self.altitude_label.setText(f"Altitude: {round(data.get('gps_data').get('alt'), 3)}")
-        self.ground_speed_label.setText("Ground Speed: 0")
+        self.altitude_label.setText(f"Altitude: {round(data['altitude'])}")
+        self.ground_speed_label.setText(f"Ground Speed: {round(data['ground_speed'])}")
         #self.flight_label.setText(f"Flight Time: {round(data.get(''))}")
-        self.airspeed_label.setText("Airspeed: 0")
+        self.airspeed_label.setText(f"Airspeed: {round(data['airspeed'])}")
         
     def newCoordinateInfo(self, data):
-        self.new_heading_data.emit(data)
+        self.new_coordinate_data.emit(data)
 
     def newBatteryInfo(self, data):
-        self.battery_label.setText("Battery(V): 0")
+        self.battery_label.setText(f"Battery(V): {round(data['battery_voltages'])}")
 
     def newRotationInfo(self, data):
-        self.new_heading_data.emit(data)
+        self.new_rotation_data.emit(data)
 
     
