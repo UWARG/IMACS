@@ -70,7 +70,7 @@ class HeadingWidget(QVBoxLayout):
         self.compassgraphic_pixmap.setRotation(0)
 
     def newRotationInfo(self, data):
-        self.circlegraphic_pixmap.setRotation(0)
+        self.circlegraphic_pixmap.setRotation(data['roll'])
         
         
 

@@ -60,15 +60,15 @@ class HomePage(QWidget):
 
     def newDroneInfo(self, data):
         self.altitude_label.setText(f"Altitude: {round(data['altitude'])}")
-        self.ground_speed_label.setText("Ground Speed: 0")
+        self.ground_speed_label.setText(f"Ground Speed: {round(data['ground_speed'])}")
         #self.flight_label.setText(f"Flight Time: {round(data.get(''))}")
-        self.airspeed_label.setText("Airspeed: 0")
+        self.airspeed_label.setText(f"Airspeed: {round(data['airspeed'])}")
         
     def newCoordinateInfo(self, data):
         self.new_coordinate_data.emit(data)
 
     def newBatteryInfo(self, data):
-        self.battery_label.setText("Battery(V): 0")
+        self.battery_label.setText(f"Battery(V): {round(data['battery_voltages'])}")
 
     def newRotationInfo(self, data):
         self.new_rotation_data.emit(data)
