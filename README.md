@@ -1,5 +1,7 @@
 # IMACS
 
+**IMACS has been replaced with [IMACS 2.0](https://github.com/UWARG/IMACS-2)**.
+
 This repository contains the code to create and run the graphical user interface that maps information from the drone.
 
 To use the project locally on your machine:
